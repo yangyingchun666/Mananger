@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>后台登录</title>
+    <title>用户登录</title>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -15,7 +15,7 @@
 </head>
 
 <body class="layui-login">
-<form method="post" class="layui-form">
+<form method="post" class="layui-form" lay-filter="loginFrom">
     <div class="login-wrap">
         <div class="login-logo"></div>
         <div class="login-form" style="padding: 20px 30px">
@@ -29,6 +29,9 @@
             </div>
             <div class="col">
                 <input type="submit" value="登录" lay-submit lay-filter="login" class="login-btn"/>
+                <input id="register" onclick="registerBtn()" type="button" value="注册" lay-register lay-filter="register"
+                       class="layui-btn"
+                       style="width: 100%;height: 42px;font-size: 18px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em;"/>
             </div>
         </div>
     </div>
@@ -41,35 +44,24 @@
 </form>
 <script>
     $(function () {
-        layui.use('form', function () {
-            var form = layui.form;
-            form.on('submit(login)', function (data) {
-                layer.msg(JSON.stringify(data.field), function () {
-                    location.href = '/index/indexPage'
-                });
-                return false;
-            });
-        });
-    })
-</script>
-<script>
-    $(function () {
-        layui.use('form', function () {
+        layui.use(['element', 'layer', 'jquery', 'form'], function () {
+            var layer = layui.layer;
+            var $ = layui.$;
             var form = layui.form;
             form.on('submit(login)', function () {
-              var form = layui.form;
+                var data = form.val('loginFrom')
+                console.log(JSON.stringify(data))
+                console.log(data)
                 $.ajax({
                     url: '/loginInto',
                     type: 'post',
-                    dataType: 'text',
                     contentType: 'application/json',
-                    data: JSON.stringify(form),
-                    timeout: 2000,
-                    success: function (data) {
-                        console.log(data);
-                        if (data.code == '0') {
+                    data: JSON.stringify(data),
+                    success: function (result) {
+                        console.log(result.state);
+                        if (result.state == 0) {
                             layer.msg("登录成功，即将跳转。。。");
-                            location.href = "/index/indexPage"
+                            location.href = "/index/indexPage?username=" + data.username
                         } else {
                             layer.msg("登录失败")
                         }
@@ -81,6 +73,10 @@
             });
         })
     })
+
+    $("register").click(function () {
+        location.href = "/index/register"
+    });
 </script>
 </body>
 

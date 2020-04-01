@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>index</title>
@@ -102,14 +102,14 @@
             <li class="layui-nav-item" onclick="showinfo()" value="0" id="showinfo1">
                 <a href="javascript:;">
                     <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
-                    贤心
+                    <span th:text="${sign}"></span>
                     <span class="layui-nav-more" id="showspan"></span></a>
                 <dl id="showinfo" class="layui-nav-child layui-anim layui-anim-upbit">
                     <dd><a href="">基本资料</a></dd>
                     <dd><a href="">安全设置</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退了</a></li>
+            <li class="layui-nav-item"><a href="/index/login">退出登录</a></li>
             <span class="layui-nav-bar" style="left: 20px; top: 55px; width: 0px; opacity: 0;"></span></ul>
     </div>
 <!--    侧边栏-->
@@ -145,7 +145,7 @@
 
     <!--tab标签-->
     <div class="layui-tab" lay-filter="demo" lay-allowclose="true" style="margin-left: 200px;">
-        <ul class="layui-tab-title"></ul>
+        <ul class="layui-tab-title" style="left:10px;"></ul>
         <div class="layui-tab-content"></div>
     </div>
     <!--     底部-->

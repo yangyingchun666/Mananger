@@ -24,4 +24,6 @@ public interface Test1Mapper {
     Integer selectCount();
 
     String selectPwdByUsername(@Param("username") String username);
+
+    Test1 selectByUsernameAndPwd(@Param("username")String username);
 }

@@ -47,6 +47,6 @@
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
         <!-- 指定数据库表 -->
-        <table schema="" tableName="test1"></table>
+        <table schema="" tableName="user_info"></table>
     </context>
 </generatorConfiguration>

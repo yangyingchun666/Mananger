@@ -103,4 +103,10 @@
     select password from test1
     where username=#{username}
   </select>
+  <select id="selectByUsernameAndPwd" parameterType="java.lang.String" resultType="com.yyc.testredis.pojo.Test1">
+    select
+    <include refid="Base_Column_List" />
+    from test1
+    where username=#{username}
+  </select>
 </mapper>
