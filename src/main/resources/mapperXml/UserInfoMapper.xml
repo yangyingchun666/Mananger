@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyc.testredis.mapper.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.yyc.testredis.pojo.UserInfo" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_info
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.testredis.pojo.UserInfo" >
+    insert into user_info (ID, username, password, 
+      sex, city, sign, phone, 
+      birth, roleId, CREATE_TIME, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{birth,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.testredis.pojo.UserInfo" >
+    update user_info
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      birth = #{birth,jdbcType=VARCHAR},
+      roleId = #{roleid,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select ID, username, password, sex, city, sign, phone, birth, roleId, CREATE_TIME, 
+    UPDATE_TIME
+    from user_info
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select ID, username, password, sex, city, sign, phone, birth, roleId, CREATE_TIME, 
+    UPDATE_TIME
+    from user_info
+  </select>
+</mapper>
