@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.testredis.mapper.Test1Mapper">
+  <resultMap id="BaseResultMap" type="com.yyc.testredis.pojo.Test1">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="experience" jdbcType="DECIMAL" property="experience" />
+    <result column="score" jdbcType="DECIMAL" property="score" />
+    <result column="classify" jdbcType="VARCHAR" property="classify" />
+    <result column="wealth" jdbcType="VARCHAR" property="wealth" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID,username,password,sex,city,city,sign,experience,score,classify,wealth,CREATE_TIME,UPDATE_TIME
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from test1
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.yyc.testredis.pojo.Test1">
+    insert into test1 (ID, username, password, 
+      sex, city, sign, experience, 
+      score, classify, wealth, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{experience,jdbcType=DECIMAL}, 
+      #{score,jdbcType=DECIMAL}, #{classify,jdbcType=VARCHAR}, #{wealth,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.testredis.pojo.Test1">
+    update test1
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      experience = #{experience,jdbcType=DECIMAL},
+      score = #{score,jdbcType=DECIMAL},
+      classify = #{classify,jdbcType=VARCHAR},
+      wealth = #{wealth,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, username, password, sex, city, sign, experience, score, classify, wealth, 
+    CREATE_TIME, UPDATE_TIME
+    from test1
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, username, password, sex, city, sign, experience, score, classify, wealth, 
+    CREATE_TIME, UPDATE_TIME
+    from test1
+  </select>
+  <!-- 通过条件分页查询，返回数据集 -->
+  <select id="selectPageList" parameterType="com.yyc.testredis.utils.Page" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from test1
+    <where>
+      <if test="id!=null and id !=''">
+        AND  id = #{id}
+      </if>
+      <if test="keyWord!='' and keyType=='username' ">
+        AND username like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='sign' ">
+        AND sign like '%' #{keyWord} '%'
+      </if>
+
+    </where>
+    order by id asc
+    limit #{start},#{rows}
+  </select>
+
+  <!-- 通过条件分页查询，返回总记录数 -->
+  <select id="selectPageCount" parameterType="com.yyc.testredis.utils.Page" resultType="java.lang.Integer">
+    select count(1) from test1
+    <where>
+      <if test="id!=null and userid !=''">
+      AND  id = #{id}
+      </if>
+      <if test="keyWord!='' and keyType=='username' ">
+        AND username like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='sign' ">
+        AND sign like '%' #{keyWord} '%'
+      </if>
+    </where>
+  </select>
+  <select id="selectCount" resultType="java.lang.Integer">
+     select count(*)
+    from test1
+    where 1=1
+  </select>
+  <select id="selectPwdByUsername" parameterType="java.lang.String" resultType="java.lang.String">
+    select password from test1
+    where username=#{username}
+  </select>
+</mapper>

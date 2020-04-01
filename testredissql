@@ -1,0 +1,19 @@
+CREATE DATABASE IF NOT EXISTS 'test_redis';
+CREATE DATABASE 'test_redis' CHARACTER SET 'utf8';
+
+CREATE TABLE `test1` (
+  `ID` varchar(50) NOT NULL COMMENT 'id',
+  `username` varchar(50) DEFAULT NULL COMMENT '用户名',
+  `sex` varchar(2) DEFAULT NULL COMMENT '性别',
+  `city` varchar(50) DEFAULT NULL COMMENT '城市',
+  `sign` varchar(50) DEFAULT NULL COMMENT '签名',
+  `experience` decimal (15,2) DEFAULT NULL COMMENT '积分',
+  `score` decimal(15,2) DEFAULT NULL COMMENT '评分',
+  `classify` varchar(50) DEFAULT NULL COMMENT '职业',
+  `wealth` varchar(10) DEFAULT NULL COMMENT '财富',
+  `CREATE_TIME` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `CREATE_USER_ID` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `UPDATE_TIME` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  `UPDATE_USER_ID` varchar(50) DEFAULT NULL COMMENT '修改人',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '测试表';
