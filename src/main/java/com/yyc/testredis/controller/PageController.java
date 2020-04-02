@@ -1,7 +1,8 @@
 package com.yyc.testredis.controller;
 
-import com.yyc.testredis.pojo.Test1;
+import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.Test1Service;
+import com.yyc.testredis.service.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
     @Autowired
     Test1Service test1Service;
+    @Autowired
+    UserInfoService userInfoService;
 
     /**
      * 主页面
@@ -24,8 +27,9 @@ public class PageController {
     public String index(Model model, String username){
         log.info("登录到主页面");
         log.info("username:[]",username);
-        Test1 test1=test1Service.selectByUsernameAndPwd(username);
-        model.addAttribute("sign",test1.getSign());
+        UserInfo userInfo=userInfoService.selectByUsername(username);
+        model.addAttribute("headerImgPath",userInfo.getHeaderImgPath());
+        model.addAttribute("sign",userInfo.getSign());
         return "indexPage";
     }
 

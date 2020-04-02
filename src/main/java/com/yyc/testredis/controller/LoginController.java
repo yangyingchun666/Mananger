@@ -5,8 +5,8 @@ import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.Test1Service;
 import com.yyc.testredis.service.UserInfoService;
 import com.yyc.testredis.utils.CreateIDUtils;
+import com.yyc.testredis.utils.DESUtil;
 import com.yyc.testredis.utils.JsonResult;
-import com.yyc.testredis.utils.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,18 +38,20 @@ public class LoginController {
     @ResponseBody
     public JsonResult login(@RequestBody User user){
         log.info("用户登录");
-        log.info("username{}",user.getUsername());
-        log.info("password{}",user.getPassword());
-        String md5 = MD5Util.getMD5(user.getPassword());
-        String pwd=test1Service.selectPwdByUsername(user.getUsername());
+        log.info("username{}：",user.getUsername());
+        log.info("password{}：",user.getPassword());
+        String pwd=userInfoService.selectPwdByUsername(user.getUsername());
+        //DES解密
+        DESUtil des=new DESUtil();
+        String password = des.decryptStr(pwd);
+        log.info("解密后：",password);
         if(pwd==null || "".equals(pwd)){
             return new JsonResult(1,"用户未注册");
         }
-        String pwdMd5 = MD5Util.getMD5(pwd);
-        if(md5.equals(pwdMd5)){
-            return new JsonResult(0);
+        if(user.getPassword().equals(password)){
+            return new JsonResult(0,"登录成功");
         }else {
-            return new JsonResult(1);
+            return new JsonResult(1,"登录失败");
         }
 
     }
@@ -106,9 +108,13 @@ public class LoginController {
     @PostMapping("/registerInto")
     @ResponseBody
     public JsonResult registerInto(@RequestBody UserInfo userInfo){
+
         log.info("用户注册");
         log.info("userInfo{}=",userInfo.toString());
-        String password = MD5Util.getMD5(userInfo.getPassword());
+        //DES加密
+        DESUtil des=new DESUtil();
+        String password = des.encryptStr(userInfo.getPassword());
+        log.info("加密后password{}",password);
         userInfo.setId(CreateIDUtils.genUsualId());
         userInfo.setPassword(password);
         userInfo.setCreateTime(new Date());
@@ -126,4 +132,53 @@ public class LoginController {
             return new JsonResult(0,"注册成功");
         }
     }
+
+    /**
+     * 手机号唯一性验证
+     * @param verifyPhone
+     * @return
+     */
+    @GetMapping("/verifyPhone")
+    @ResponseBody
+    public JsonResult verifyPhone(@RequestParam("verifyPhone") String verifyPhone){
+        log.info("验证手机号");
+        log.info("verifyPhone{}=",verifyPhone);
+        Integer result=0;
+        try {
+            result=userInfoService.selectCountByParam(verifyPhone,null);
+        }catch (Exception e){
+            log.info("验证手机号查询异常",e);
+            return new JsonResult(1);
+        }
+        if(result<1){
+            return new JsonResult(0);
+        }else {
+            return new JsonResult(1);
+        }
+    }
+
+    /**
+     * 用户名唯一性验证
+     * @param verifyUsername
+     * @return
+     */
+    @GetMapping("/verifyUsername")
+    @ResponseBody
+    public JsonResult verifyUsername(@RequestParam("verifyUsername") String verifyUsername){
+        log.info("用户名唯一性验证");
+        log.info("verifyUsername{}=",verifyUsername);
+        Integer result=0;
+        try {
+            result=userInfoService.selectCountByParam(null,verifyUsername);
+        }catch (Exception e){
+            log.info("验证用户名查询异常",e);
+            return new JsonResult(1);
+        }
+        if(result<1){
+            return new JsonResult(0);
+        }else {
+            return new JsonResult(1);
+        }
+    }
+
 }

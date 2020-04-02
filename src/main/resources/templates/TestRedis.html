@@ -45,11 +45,12 @@
                     , {field: 'username', title: '用户名',}
                     , {field: 'sex', title: '性别', sort: true}
                     , {field: 'city', title: '城市'}
-                    , {field: 'sign', title: '签名'}
-                    , {field: 'experience', title: '积分', sort: true}
-                    , {field: 'score', title: '评分', sort: true}
-                    , {field: 'classify', title: '职业'}
-                    , {field: 'wealth', title: '财富', sort: true}
+                    , {field: 'sign', title: '姓名'}
+                    , {field: 'phone', title: '手机号', sort: true}
+                    , {field: 'birth', title: '出身日期', sort: true,templet: function (d) {
+                        return dateToStr(d.birth);
+                    }}
+                    , {field: 'roleName', title: '身份'}
                     , {
                     field: 'createTime', title: '创建时间', sort: true, templet: function (d) {
                         return dateToStr(d.createTime);

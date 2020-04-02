@@ -27,8 +27,12 @@ public class Page implements Serializable {
     private Integer start;
     //用户id
     private String id;
-    //其他用户id
+    //用户名
     private String username;
+    //手机号
+    private String phone;
+    //姓名
+    private String sign;
 
     public String getKeyType() {
         return keyType;

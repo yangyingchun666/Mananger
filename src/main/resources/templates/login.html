@@ -28,7 +28,7 @@
                 <label class="icon pwd"></label>
             </div>
             <div class="col">
-                <input type="submit" value="登录" lay-submit lay-filter="login" class="login-btn"/>
+                <input type="button" value="登录" lay-submit lay-filter="login" class="login-btn" id="loginBtn"/>
                 <input id="register" onclick="registerBtn()" type="button" value="注册" lay-register lay-filter="register"
                        class="layui-btn"
                        style="width: 100%;height: 42px;font-size: 18px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em;"/>
@@ -48,7 +48,7 @@
             var layer = layui.layer;
             var $ = layui.$;
             var form = layui.form;
-            form.on('submit(login)', function () {
+            $("#loginBtn").click(function (){
                 var data = form.val('loginFrom')
                 console.log(JSON.stringify(data))
                 console.log(data)
@@ -74,7 +74,7 @@
         })
     })
 
-    $("register").click(function () {
+    $("#register").click(function () {
         location.href = "/index/register"
     });
 </script>

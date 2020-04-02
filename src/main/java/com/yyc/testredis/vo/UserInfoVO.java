@@ -1,10 +1,11 @@
-package com.yyc.testredis.pojo;
+package com.yyc.testredis.vo;
 
 import lombok.Data;
 
 import java.util.Date;
+
 @Data
-public class UserInfo {
+public class UserInfoVO {
     private String id;
 
     private String username;
@@ -23,11 +24,16 @@ public class UserInfo {
 
     private String roleId;
 
+    //user_role表
+    private String roleName;
+
+    private String roleParentId;
+
     private String headerImgPath;
+    //user_role表
+
 
     private Date createTime;
 
     private Date updateTime;
-
-
 }

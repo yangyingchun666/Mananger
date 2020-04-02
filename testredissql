@@ -1,19 +1,75 @@
-CREATE DATABASE IF NOT EXISTS 'test_redis';
-CREATE DATABASE 'test_redis' CHARACTER SET 'utf8';
+/*
+ Navicat Premium Data Transfer
 
-CREATE TABLE `test1` (
-  `ID` varchar(50) NOT NULL COMMENT 'id',
-  `username` varchar(50) DEFAULT NULL COMMENT '用户名',
-  `sex` varchar(2) DEFAULT NULL COMMENT '性别',
-  `city` varchar(50) DEFAULT NULL COMMENT '城市',
-  `sign` varchar(50) DEFAULT NULL COMMENT '签名',
-  `experience` decimal (15,2) DEFAULT NULL COMMENT '积分',
-  `score` decimal(15,2) DEFAULT NULL COMMENT '评分',
-  `classify` varchar(50) DEFAULT NULL COMMENT '职业',
-  `wealth` varchar(10) DEFAULT NULL COMMENT '财富',
-  `CREATE_TIME` timestamp NULL DEFAULT NULL COMMENT '创建时间',
-  `CREATE_USER_ID` varchar(50) DEFAULT NULL COMMENT '创建人',
-  `UPDATE_TIME` timestamp NULL DEFAULT NULL COMMENT '修改时间',
-  `UPDATE_USER_ID` varchar(50) DEFAULT NULL COMMENT '修改人',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '测试表';
+ Source Server         : localdatabases
+ Source Server Type    : MySQL
+ Source Server Version : 80015
+ Source Host           : localhost:3306
+ Source Schema         : test_redis
+
+ Target Server Type    : MySQL
+ Target Server Version : 80015
+ File Encoding         : 65001
+
+ Date: 01/04/2020 17:18:43
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for test1
+-- ----------------------------
+DROP TABLE IF EXISTS `test1`;
+CREATE TABLE `test1`  (
+  `ID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'id',
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `sex` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
+  `city` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '城市',
+  `sign` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '签名',
+  `experience` decimal(15, 2) NULL DEFAULT NULL COMMENT '积分',
+  `score` decimal(15, 2) NULL DEFAULT NULL COMMENT '评分',
+  `classify` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '职业',
+  `wealth` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '财富',
+  `CREATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '测试表' ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+DROP TABLE IF EXISTS `user_info`;
+CREATE TABLE `user_info`  (
+  `ID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键',
+  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `sex` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '性别',
+  `city` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '住址',
+  `sign` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
+  `phone` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机号',
+  `birth` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出生日期',
+  `roleId` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色id',
+  `CREATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户信息表' ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+DROP TABLE IF EXISTS `user_role`;
+CREATE TABLE `user_role`  (
+  `ID` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键',
+  `parentid` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上级id',
+  `rolename` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
+  `CREATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` timestamp(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`ID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+
+

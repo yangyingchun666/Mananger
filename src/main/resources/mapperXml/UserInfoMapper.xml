@@ -1,34 +1,38 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yyc.testredis.mapper.UserInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.yyc.testredis.pojo.UserInfo" >
-    <id column="ID" property="id" jdbcType="VARCHAR" />
-    <result column="username" property="username" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="sign" property="sign" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="birth" property="birth" jdbcType="VARCHAR" />
-    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyc.testredis.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.yyc.testredis.pojo.UserInfo">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="birth" jdbcType="VARCHAR" property="birth" />
+    <result column="roleid" jdbcType="VARCHAR" property="roleId" />
+    <result column="headerimgpath" jdbcType="VARCHAR" property="headerImgPath" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <sql id="Base_Column_List">
+        ID,username,password,sex,city,sign,phone,birth,roleid,headerimgpath,CREATE_TIME,UPDATE_TIME
+    </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from user_info
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.yyc.testredis.pojo.UserInfo" >
-    insert into user_info (ID, username, password, 
-      sex, city, sign, phone, 
-      birth, roleId, CREATE_TIME, 
-      UPDATE_TIME)
+  <insert id="insert" parameterType="com.yyc.testredis.pojo.UserInfo">
+    insert into user_info (ID, username, password,
+      sex, city, sign, phone,
+      birth, roleid, headerimgpath,
+      CREATE_TIME, UPDATE_TIME)
     values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{sex,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{birth,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{birth,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{headerImgPath,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.yyc.testredis.pojo.UserInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.yyc.testredis.pojo.UserInfo">
     update user_info
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -37,20 +41,100 @@
       sign = #{sign,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       birth = #{birth,jdbcType=VARCHAR},
-      roleId = #{roleid,jdbcType=VARCHAR},
+      roleid = #{roleId,jdbcType=VARCHAR},
+      headerimgpath = #{headerImgPath,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
     where ID = #{id,jdbcType=VARCHAR}
   </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select ID, username, password, sex, city, sign, phone, birth, roleId, CREATE_TIME, 
-    UPDATE_TIME
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, username, password, sex, city, sign, phone, birth, roleid, headerimgpath,
+    CREATE_TIME, UPDATE_TIME
     from user_info
     where ID = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select ID, username, password, sex, city, sign, phone, birth, roleId, CREATE_TIME, 
-    UPDATE_TIME
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, username, password, sex, city, sign, phone, birth, roleid, headerimgpath,
+    CREATE_TIME, UPDATE_TIME
     from user_info
   </select>
+    <select id="selectCountByParam" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from user_info
+        where
+        <if test="verifyPhone !=null and verifyPhone !=''">
+            phone =#{verifyPhone}
+        </if>
+        <if test="verifyUsername !=null and verifyPhone !=''">
+            username =#{verifyUsername}
+        </if>
+    </select>
+    <select id="selectPwdByUsername" parameterType="java.lang.String" resultType="java.lang.String">
+        select password
+        from user_info
+        where
+        1=1
+        <if test="username !=null and username !=''">
+            and  username =#{username}
+        </if>
+    </select>
+    <select id="selectByUsername" parameterType="java.lang.String" resultType="com.yyc.testredis.pojo.UserInfo">
+        select *
+        from user_info
+        where
+        1=1
+        <if test="username !=null and username !=''">
+            and  username =#{username}
+        </if>
+    </select>
+    <!-- 通过条件分页查询，返回数据集 -->
+    <select id="selectPageList" parameterType="com.yyc.testredis.utils.Page" resultType="com.yyc.testredis.vo.UserInfoVO">
+        select
+        i.ID as id,i.username as username,i.password as password,i.sex as sex,i.city as city,i.sign as sign,i.phone as phone,i.birth birth
+        ,i.roleid as roleId,i.headerimgpath as headerImgPath,i.CREATE_TIME as createTime,i.UPDATE_TIME as updateTime,r.rolename as roleName
+        from user_info i
+        left join user_role r on r.id=i.roleid
+        <where>
+            <if test="id!=null and id !=''">
+                AND  i.id = #{id}
+            </if>
+            <if test="keyWord!='' and keyType=='username' ">
+                AND i.username like '%' #{keyWord} '%'
+            </if>
+            <if test="keyWord!='' and keyType=='sign' ">
+                AND i.sign like '%' #{keyWord} '%'
+            </if>
+        </where>
+        order by i.id asc
+        limit #{start},#{rows}
+    </select>
+
+    <!-- 通过条件分页查询，返回总记录数 -->
+    <select id="selectPageCount" parameterType="com.yyc.testredis.utils.Page" resultType="java.lang.Integer">
+        select count(1) from user_info
+        <where>
+            <if test="id!=null and userid !=''">
+                AND  id = #{id}
+            </if>
+            <if test="keyWord!='' and keyType=='username' ">
+                AND username like '%' #{keyWord} '%'
+            </if>
+            <if test="keyWord!='' and keyType=='sign' ">
+                AND sign like '%' #{keyWord} '%'
+            </if>
+        </where>
+    </select>
+    <select id="selectUserInfoById" parameterType="java.lang.String" resultType="com.yyc.testredis.vo.UserInfoVO">
+        select
+        i.ID as id,i.username as username,i.password as password,i.sex as sex,i.city as city,i.sign as sign,i.phone as phone,i.birth birth
+        ,i.roleid as roleId,i.headerimgpath as headerImgPath,i.CREATE_TIME as createTime,i.UPDATE_TIME as updateTime,r.rolename as roleName,
+        r.parentId as roleParentId
+        from user_info i
+        left join user_role r on r.id=i.roleid
+        <where>
+            <if test="id!=null and id !=''">
+                AND  i.id = #{id}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -9,7 +9,15 @@
 </head>
 <script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js"></script>
-<script>
+
+
+<script th:inline="javascript">
+    var projects = [[${headerImgPath}]]; <!--接收值-->
+    $(function showData() {
+        console.log(projects)
+        $("#headerImg").attr('src', loginUrl + "showImage?imgUrl=" + projects);
+    });
+    var loginUrl = window.location.protocol + "//" + window.location.host + "/";
     layui.use(['element', 'layer', 'jquery'], function () {
         var element = layui.element;
         var layer = layui.layer;
@@ -101,7 +109,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item" onclick="showinfo()" value="0" id="showinfo1">
                 <a href="javascript:;">
-                    <img src="//tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg" class="layui-nav-img">
+                    <img id="headerImg" src="" class="layui-nav-img">
                     <span th:text="${sign}"></span>
                     <span class="layui-nav-more" id="showspan"></span></a>
                 <dl id="showinfo" class="layui-nav-child layui-anim layui-anim-upbit">

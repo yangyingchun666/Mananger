@@ -5,20 +5,21 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.yyc.testredis.pojo.Test1;
 import com.yyc.testredis.service.Test1Service;
+import com.yyc.testredis.service.UserInfoService;
+import com.yyc.testredis.service.UserRoleService;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.RedisUtil;
 import com.yyc.testredis.utils.ResultMap;
+import com.yyc.testredis.vo.UserInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/test")
@@ -27,8 +28,14 @@ public class TestRedisController {
     @Autowired
     Test1Service test1Service;
     private static int ExpireTime = 3600;   // redis中存储的过期时间60s
+
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    UserInfoService userInfoService;
+    @Autowired
+    UserRoleService userRoleService;
+
 
     @RequestMapping("/redis")
     public String testRedis() {
@@ -57,8 +64,8 @@ public class TestRedisController {
             return new ResultMap("成功", list1, 0, total);
         } else {
             page.setRows(limit);
-            List<Test1> contentList = test1Service.selectPageList(page);
-            int totals = test1Service.selectPageCount(page);
+            List<UserInfoVO> contentList = userInfoService.selectPageList(page);
+            int totals = userInfoService.selectPageCount(page);
             page.setTotalRecord(totals);
             redisUtil.set("data", JSON.toJSONString(contentList));
             redisUtil.set("pageCount", "" + totals);
@@ -81,8 +88,8 @@ public class TestRedisController {
     @RequestMapping("/editData")
     public String editDataPage(Model model, @RequestParam("id") String id) {
         log.info("编辑页面");
-        Test1 test1 = test1Service.selectTest1ById(id);
-        model.addAttribute("test1", test1);
+        UserInfoVO userInfo = userInfoService.selectUserInfoById(id);
+        model.addAttribute("userInfo", userInfo);
         return "helloPage";
     }
 
