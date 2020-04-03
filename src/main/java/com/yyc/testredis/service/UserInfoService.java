@@ -23,4 +23,5 @@ public interface UserInfoService {
 
     UserInfoVO selectUserInfoById(String id);
 
+    Integer update(UserInfo userInfo);
 }

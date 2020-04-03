@@ -51,4 +51,13 @@ public class PageController {
         return "register";
     }
 
+    /**
+     * 用户信息列表页面
+     * @return
+     */
+    @RequestMapping("/userInfoPage")
+    public String userInfoPage() {
+        return "userInfoList";
+    }
+
 }

@@ -30,4 +30,6 @@ public interface UserInfoMapper {
     int selectPageCount(Page page);
 
     UserInfoVO selectUserInfoById(@Param("id")String id);
+
+    Integer updateByPrimaryKeySelective(UserInfo userInfo);
 }

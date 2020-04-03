@@ -53,5 +53,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoMapper.selectUserInfoById(id);
     }
 
+    @Override
+    public Integer update(UserInfo userInfo) {
+        return userInfoMapper.updateByPrimaryKeySelective(userInfo);
+    }
+
 
 }
