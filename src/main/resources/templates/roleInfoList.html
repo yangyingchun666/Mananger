@@ -1,6 +1,6 @@
 <head>
     <meta charset="utf-8">
-    <title>Layui</title>
+    <title>角色管理</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css"/>
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
@@ -29,10 +29,10 @@
         var layer = layui.layer;
         var form = layui.form;
         //第一个实例
-        var userInfoDateGrid = table.render({
-            elem: '#userInfo',
-            url: '/userInfo/dataGrid'
-            , id: 'userInfoData'
+        var userRoleInfoDateGrid = table.render({
+            elem: '#userRoleInfo',
+            url: '/role/dataGrid'
+            , id: 'userRoleInfoData'
             , page: true //开启分页
             , limit: 10
             , cellMinWidth: 100
@@ -46,13 +46,8 @@
                 [
                     {type: 'checkbox'}
                     , {field: 'id', title: 'ID', sort: true}
-                    , {field: 'username', title: '用户名', align: 'center'}
-                    , {field: 'sex', title: '性别'/*,edit:'text'*/, align: 'center'}
-                    , {field: 'city', title: '城市', align: 'center'/*,edit:'text'*/}
-                    , {field: 'sign', title: '姓名', align: 'center'}
-                    , {field: 'phone', title: '手机号', align: 'center'/*,edit:'text'*/}
-                    , {field: 'birth', title: '出生日期', sort: true, align: 'center',}
-                    , {field: 'roleName', title: '角色身份', align: 'center'}
+                    , {field: 'parentid', title: '用户名', align: 'center'}
+                    , {field: 'rolename', title: '性别'/*,edit:'text'*/, align: 'center'}
                     , {
                     field: 'createTime', title: '创建时间', sort: true, templet: function (d) {
                         return dateToStr(d.createTime);
@@ -74,17 +69,17 @@
         });
 
         //监听表格复选框选择
-        table.on('checkbox(userInfo)', function (obj) {
+        table.on('checkbox(userRoleInfo)', function (obj) {
             console.log(obj)
         });
 
         //监听表格单选框选择
-        table.on('radio(userInfo)', function (obj) {
+        table.on('radio(userRoleInfo)', function (obj) {
             console.log(obj)
         });
 
         //监听单元格编辑
-        table.on('edit(userInfo)', function (obj) {
+        table.on('edit(userRoleInfo)', function (obj) {
             var value = obj.value //得到修改后的值
                 , data = obj.data //得到所在行所有键值
                 , field = obj.field; //得到字段
@@ -102,7 +97,7 @@
                 var keyWord = $('#searchReload').val();
                 var keyType = $("#key_type option:selected").val();
                 //执行重载
-                table.reload('userInfoData', {
+                table.reload('userRoleInfoData', {
                     method: 'post',
                     page: {
                         curr: 1 //重新从第 1 页开始
@@ -121,7 +116,7 @@
 
 
         //自定义工具栏监听事件
-        table.on('toolbar(userInfo)', function (obj) {
+        table.on('toolbar(userRoleInfo)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
                 case 'getSelect':
@@ -143,7 +138,7 @@
             }
         });
         //监听工具条
-        table.on('tool(userInfo)', function (obj) {
+        table.on('tool(userRoleInfo)', function (obj) {
             var data = obj.data;
             if (obj.event === 'detail') {
                 layer.msg('ID：' + data.id + ' 的查看操作');
@@ -161,7 +156,7 @@
                     offset: ['5%', '25%'],//设置位移
                     area: ['900px', '700px'],
                     // btn: ['保存', '取消'],
-                    content: '/userInfo/editData?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: '/role/editData?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
             }
         });
@@ -195,16 +190,14 @@
         选择搜索类型:
                  <select name="keyType" id="key_type" class="layui-select"
                          style="width: 100px; background-color: aquamarine">
-                <option value="username" selected="selected">用户名</option>
-                <option value="sign">姓名</option>
-                <option value="phone">手机号</option>
-                <option value="city">城市</option>
-                <option value="sex">性别</option>
+                <option value="id" selected="selected">ID</option>
+                <option value="rolename">角色名</option>
+                <option value="parentid">上级角色ID</option>
             </select>
     </span>
         <button class="layui-btn searchBtn" data-type="reload">搜索</button>
     </div>
 
-    <table id="userInfo" lay-filter="userInfo"></table>
+    <table id="userRoleInfo" lay-filter="userRoleInfo"></table>
 </div>
 

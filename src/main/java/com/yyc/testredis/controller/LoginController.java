@@ -1,6 +1,5 @@
 package com.yyc.testredis.controller;
 
-import com.yyc.testredis.dto.User;
 import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.Test1Service;
 import com.yyc.testredis.service.UserInfoService;
@@ -15,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -31,24 +31,27 @@ public class LoginController {
 
     /**
      * 登录进主页
-     * @param user
+     * @param request
+     * @param session
      * @return
      */
     @PostMapping("/loginInto")
     @ResponseBody
-    public JsonResult login(@RequestBody User user){
+    public JsonResult login(HttpServletRequest request,HttpSession session){
         log.info("用户登录");
-        log.info("username{}：",user.getUsername());
-        log.info("password{}：",user.getPassword());
-        String pwd=userInfoService.selectPwdByUsername(user.getUsername());
+        String username= (String) request.getSession().getAttribute("username");
+        String password= (String) request.getSession().getAttribute("password");
+        log.info("username{}：",username);
+        log.info("password{}：",password);
+        String pwd=userInfoService.selectPwdByUsername(username);
         //DES解密
         DESUtil des=new DESUtil();
-        String password = des.decryptStr(pwd);
+        String despassword = des.decryptStr(pwd);
         log.info("解密后：",password);
         if(pwd==null || "".equals(pwd)){
             return new JsonResult(1,"用户未注册");
         }
-        if(user.getPassword().equals(password)){
+        if(password.equals(despassword)){
             return new JsonResult(0,"登录成功");
         }else {
             return new JsonResult(1,"登录失败");

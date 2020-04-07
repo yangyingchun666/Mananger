@@ -3,6 +3,8 @@ package com.yyc.testredis.mapper;
 import com.yyc.testredis.pojo.UserRole;
 import com.yyc.testredis.pojo.UserRoleExample;
 import java.util.List;
+
+import com.yyc.testredis.utils.Page;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserRoleMapper {
@@ -27,4 +29,8 @@ public interface UserRoleMapper {
     int updateByPrimaryKeySelective(UserRole record);
 
     int updateByPrimaryKey(UserRole record);
+
+    List<UserRole> selectPageList(Page page);
+
+    int selectPageCount(Page page);
 }

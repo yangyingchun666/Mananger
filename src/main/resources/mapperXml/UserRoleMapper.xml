@@ -148,6 +148,41 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
+    <select id="selectPageList" parameterType="com.yyc.testredis.utils.Page" resultType="com.yyc.testredis.pojo.UserRole">
+      select
+      <include refid="Base_Column_List"></include>
+      from user_role
+      <where>
+        1=1
+        <if test="keyWord!='' and keyType=='id' ">
+          AND id like '%' #{keyWord} '%'
+        </if>
+        <if test="keyWord!='' and keyType=='rolename' ">
+          AND rolename like '%' #{keyWord} '%'
+        </if>
+        <if test="keyWord!='' and keyType=='parentid' ">
+          AND parentid like '%' #{keyWord} '%'
+        </if>
+      </where>
+      order by id asc
+      limit #{start},#{rows}
+    </select>
+  <select id="selectPageCount" parameterType="com.yyc.testredis.utils.Page" resultType="java.lang.Integer">
+    select count(1) from user_info
+    <where>
+      1=1
+      <if test="keyWord!='' and keyType=='id' ">
+        AND id like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='rolename' ">
+        AND rolename like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='parentid' ">
+        AND parentid like '%' #{keyWord} '%'
+      </if>
+    </where>
+  </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update user_role
     <set >

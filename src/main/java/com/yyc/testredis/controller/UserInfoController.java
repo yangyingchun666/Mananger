@@ -40,6 +40,7 @@ public class UserInfoController {
 
     /**
      * layui-数据表格接口
+     *
      * @return
      */
     @RequestMapping("/dataGrid")
@@ -47,26 +48,14 @@ public class UserInfoController {
     public ResultMap<List<Test1>> backContent(Page page, @RequestParam("limit") int limit) {
         log.info("limit{}", limit);
         log.info("page{}", page.toString());
-//        Integer count = test1Service.selectCount();
-        /**
-         * 使用redis
-         */
-//        if (count == 5 && redisUtil.get("data") != null) {
-//            log.info("data{}", redisUtil.get("data"));
-//            JSONArray jsonlist = JSONObject.parseArray((String) redisUtil.get("data"));
-//            List<Test1> list1 = (List<Test1>) JSON.toJSON(jsonlist);
-//            Integer total = Integer.valueOf((String) redisUtil.get("pageCount"));
-//            return new ResultMap("成功", list1, 0, total);
-//        } else {
-            page.setRows(limit);
-            List<UserInfoVO> contentList = userInfoService.selectPageList(page);
-            int totals = userInfoService.selectPageCount(page);
-            page.setTotalRecord(totals);
-            redisUtil.set("data", JSON.toJSONString(contentList));
-            redisUtil.set("pageCount", "" + totals);
-            redisUtil.expire("data", ExpireTime);
-            return new ResultMap("成功", contentList, 0, totals);
-//        }
+        page.setRows(limit);
+        List<UserInfoVO> contentList = userInfoService.selectPageList(page);
+        int totals = userInfoService.selectPageCount(page);
+        page.setTotalRecord(totals);
+//            redisUtil.set("data", JSON.toJSONString(contentList));
+//            redisUtil.set("pageCount", "" + totals);
+//            redisUtil.expire("data", ExpireTime);
+        return new ResultMap("成功", contentList, 0, totals);
     }
 
     /**
@@ -107,9 +96,9 @@ public class UserInfoController {
         userInfo.setUpdateTime(new Date());
         Integer updateUserInfo = 0;
         updateUserInfo = userInfoService.update(userInfo);
-        if (updateUserInfo<1){
+        if (updateUserInfo < 1) {
             return new JsonResult(1);
-        }else {
+        } else {
             return new JsonResult(0);
         }
 

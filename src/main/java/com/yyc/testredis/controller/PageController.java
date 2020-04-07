@@ -60,4 +60,13 @@ public class PageController {
         return "userInfoList";
     }
 
+    /**
+     * 角色管理页面
+     * @return
+     */
+    @RequestMapping("/userRoleInfoPage")
+    public String userRoleInfoPage() {
+        return "roleInfoList";
+    }
+
 }
