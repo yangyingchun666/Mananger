@@ -61,7 +61,7 @@
                         console.log(result.state);
                         if (result.state == 0) {
                             layer.msg("登录成功，即将跳转。。。");
-                            location.href = "/index/indexPage?username=" + data.username
+                            location.href = "/index/indexPage"
                         } else if(result.message=='用户未注册'){
                             layer.msg("用户未注册")
                         } else if(result.message=='密码错误'){

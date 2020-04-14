@@ -4,7 +4,6 @@ import com.yyc.testredis.pojo.Goods;
 import com.yyc.testredis.service.GoodsService;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.ResultMap;
-import com.yyc.testredis.vo.GoodsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,5 +37,14 @@ public class GoodsController {
         int totals = goodsService.selectPageCount(page);
         page.setTotalRecord(totals);
         return new ResultMap("成功", contentList, 0, totals);
+    }
+
+    /**
+     * 编辑页面
+     */
+    @RequestMapping("/addGoods")
+    public String editDataPage() {
+        log.info("商品添加页面");
+        return "addPage/goodsAdd";
     }
 }

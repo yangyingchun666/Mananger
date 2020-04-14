@@ -27,7 +27,6 @@ import java.util.List;
 public class UserInfoController {
     @Autowired
     Test1Service test1Service;
-    private static int ExpireTime = 3600;   // redis中存储的过期时间60s
 
     @Autowired
     private RedisUtil redisUtil;
@@ -50,9 +49,6 @@ public class UserInfoController {
         List<UserInfoVO> contentList = userInfoService.selectPageList(page);
         int totals = userInfoService.selectPageCount(page);
         page.setTotalRecord(totals);
-//            redisUtil.set("data", JSON.toJSONString(contentList));
-//            redisUtil.set("pageCount", "" + totals);
-//            redisUtil.expire("data", ExpireTime);
         return new ResultMap("成功", contentList, 0, totals);
     }
 
@@ -65,7 +61,7 @@ public class UserInfoController {
         UserInfoVO userInfo = userInfoService.selectUserInfoById(id);
         model.addAttribute("userInfo", userInfo);
         model.addAttribute("headerImgPath", userInfo.getHeaderImgPath());
-        return "userInfoEdit";
+        return "editPage/userInfoEdit";
     }
 
     /**

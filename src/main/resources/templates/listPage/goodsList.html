@@ -7,6 +7,8 @@
 <script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js"></script>
 <script>
+    var loginUrl = window.location.protocol + "//" + window.location.host + "/";
+    var str=loginUrl + "showImage?imgUrl=";
     function dateToStr(date) {
         var time = new Date(date);
         var y = time.getFullYear();
@@ -24,10 +26,12 @@
         return str;
     }
 
+
     layui.use(['element', 'layer', 'jquery', 'form', 'table'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+        var $ =layui.$;
         //第一个实例
         var goodsInfoDateGrid = table.render({
             elem: '#goodsInfo',
@@ -46,6 +50,7 @@
                 [
                     {type: 'checkbox'}
                     , {field: 'id', title: 'ID', sort: true}
+                    , {field: 'gImgPath', title: '商品图片', align: 'center',templet:'<div><img id="goodsImgPath" src="'+str+'{{ d.gImgPath }}"></div>'}
                     , {field: 'gName', title: '商品名称', align: 'center'}
                     , {field: 'gStock', title: '商品库存(件)'/*,edit:'text'*/, align: 'center'}
                     , {field: 'gSalesVolume', title: '商品销量(件)', align: 'center'}
@@ -152,21 +157,22 @@
                     obj.del();
                     layer.close(index);
                 });
-            } else if (obj.event === 'edit') {
-                // layer.alert('编辑行：<br>' + JSON.stringify(data))
-                layer.open({
-                    type: 2,
-                    title: "编辑页面", //不显示标题栏
-                    closeBtn: 2,
-                    offset: ['5%', '25%'],//设置位移
-                    area: ['900px', '700px'],
-                    // btn: ['保存', '取消'],
-                    content: '/goods/editData?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                });
             }
         });
-    })
-    ;
+       $("#openAddGoodsPage").click(function () {
+           layer.open({
+               type: 2,
+               title: "商品添加页面", //不显示标题栏
+               closeBtn: 2,
+               offset: ['5%', '25%'],//设置位移
+               area: ['900px', '700px'],
+               // btn: ['保存', '取消'],
+               content: '/goods/addGoods', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+           });
+       })
+
+    });
+
 </script>
 <!--<script type="text/html" id="toolbarDemo">-->
 <!--    <div class="layui-btn-container">-->
@@ -201,8 +207,19 @@
             </select>
     </span>
         <button class="layui-btn searchBtn" data-type="reload">搜索</button>
+        <button class="layui-btn addBtn" id="openAddGoodsPage">添加商品</button>
     </div>
 
     <table id="goodsInfo" lay-filter="goodsInfo"></table>
 </div>
+<!--layui.table图片显示不全，需重新定义CSS  -->
+<style type="text/css">
+    .layui-table td{
+        height: 105px;
+    }
+    .layui-table-cell {
+        height: auto !important;
+        white-space: normal;
+    }
+</style>
 

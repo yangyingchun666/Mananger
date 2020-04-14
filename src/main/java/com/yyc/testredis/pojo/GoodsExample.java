@@ -505,6 +505,76 @@ public class GoodsExample {
             return (Criteria) this;
         }
 
+        public Criteria andGImgPathIsNull() {
+            addCriterion("g_img_path is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathIsNotNull() {
+            addCriterion("g_img_path is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathEqualTo(String value) {
+            addCriterion("g_img_path =", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathNotEqualTo(String value) {
+            addCriterion("g_img_path <>", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathGreaterThan(String value) {
+            addCriterion("g_img_path >", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathGreaterThanOrEqualTo(String value) {
+            addCriterion("g_img_path >=", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathLessThan(String value) {
+            addCriterion("g_img_path <", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathLessThanOrEqualTo(String value) {
+            addCriterion("g_img_path <=", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathLike(String value) {
+            addCriterion("g_img_path like", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathNotLike(String value) {
+            addCriterion("g_img_path not like", value, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathIn(List<String> values) {
+            addCriterion("g_img_path in", values, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathNotIn(List<String> values) {
+            addCriterion("g_img_path not in", values, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathBetween(String value1, String value2) {
+            addCriterion("g_img_path between", value1, value2, "gImgPath");
+            return (Criteria) this;
+        }
+
+        public Criteria andGImgPathNotBetween(String value1, String value2) {
+            addCriterion("g_img_path not between", value1, value2, "gImgPath");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("CREATE_TIME is null");
             return (Criteria) this;

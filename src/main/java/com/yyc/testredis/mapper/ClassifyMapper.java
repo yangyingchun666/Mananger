@@ -5,7 +5,6 @@ import com.yyc.testredis.pojo.ClassifyExample;
 import java.util.List;
 
 import com.yyc.testredis.utils.Page;
-import com.yyc.testredis.vo.ClassifyVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ClassifyMapper {

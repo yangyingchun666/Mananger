@@ -15,6 +15,8 @@ public class Goods {
 
     private String gClassfyId;
 
+    private String gImgPath;
+
     private Date createTime;
 
     private Date updateTime;
@@ -67,6 +69,14 @@ public class Goods {
         this.gClassfyId = gClassfyId == null ? null : gClassfyId.trim();
     }
 
+    public String getgImgPath() {
+        return gImgPath;
+    }
+
+    public void setgImgPath(String gImgPath) {
+        this.gImgPath = gImgPath;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -116,6 +126,7 @@ public class Goods {
                 ", gSalesVolume=" + gSalesVolume +
                 ", gLocationId='" + gLocationId + '\'' +
                 ", gClassfyId='" + gClassfyId + '\'' +
+                ", gImgPath='" + gImgPath + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", gLocationName='" + gLocationName + '\'' +

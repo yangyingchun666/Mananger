@@ -5,6 +5,7 @@ import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.BannerService;
 import com.yyc.testredis.service.Test1Service;
 import com.yyc.testredis.service.UserInfoService;
+import com.yyc.testredis.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ public class PageController {
     UserInfoService userInfoService;
     @Autowired
     BannerService bannerService;
+    @Autowired
+    RedisUtil redisUtil;
 
     /**
      * 主页面
@@ -31,8 +34,9 @@ public class PageController {
      * @return
      */
     @GetMapping("/indexPage")
-    public String index(Model model, String username) {
+    public String index(Model model) {
         log.info("登录到主页面");
+        String username= (String) redisUtil.get("username");
         log.info("username:[]", username);
         UserInfo userInfo = userInfoService.selectByUsername(username);
         model.addAttribute("headerImgPath", userInfo.getHeaderImgPath());
@@ -41,7 +45,6 @@ public class PageController {
          * 查询轮播图
          */
         List<Banner> bannerList = bannerService.selectAll();
-//        String json = JSON.toJSONString(bannerList);
         model.addAttribute("bannerList",bannerList);
         return "indexPage";
     }
@@ -73,7 +76,7 @@ public class PageController {
      */
     @RequestMapping("/userInfoPage")
     public String userInfoPage() {
-        return "userInfoList";
+        return "listPage/userInfoList";
     }
 
     /**
@@ -83,7 +86,7 @@ public class PageController {
      */
     @RequestMapping("/userRoleInfoPage")
     public String userRoleInfoPage() {
-        return "roleInfoList";
+        return "listPage/roleInfoList";
     }
 
     /**
@@ -93,7 +96,7 @@ public class PageController {
      */
     @RequestMapping("/classifyListPage")
     public String classifyInfoPage() {
-        return "classifyList";
+        return "listPage/classifyList";
     }
 
     /**
@@ -103,7 +106,7 @@ public class PageController {
      */
     @RequestMapping("/goodLocationPage")
     public String goodLocationInfoPage() {
-        return "goodLocation";
+        return "listPage/goodLocation";
     }
 
     /**
@@ -113,7 +116,7 @@ public class PageController {
      */
     @RequestMapping("/goodsInfoPage")
     public String goodsInfoPage() {
-        return "goodsList";
+        return "listPage/goodsList";
     }
 
 }

@@ -2,6 +2,7 @@ package com.yyc.testredis.controller;
 
 import com.yyc.testredis.pojo.GoodsLocation;
 import com.yyc.testredis.service.GoodLocationService;
+import com.yyc.testredis.utils.JsonResult;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.ResultMap;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +37,20 @@ public class GoodLocationController {
         page.setTotalRecord(totals);
         return new ResultMap("成功", contentList, 0, totals);
     }
+
+    /**
+     * 商品位置信息-数据表格接口
+     *
+     * @return
+     */
+    @RequestMapping("/selectGoodLocation")
+    @ResponseBody
+    public JsonResult selectGoodLocation() {
+        log.info("查询货架列表");
+        List<GoodsLocation> contentList = goodLocationService.selectAll();
+        return new JsonResult(1,"成功",contentList);
+    }
+
+
 
 }

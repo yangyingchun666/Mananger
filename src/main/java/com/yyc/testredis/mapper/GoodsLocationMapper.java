@@ -33,4 +33,6 @@ public interface GoodsLocationMapper {
     List<GoodsLocation> selectPageList(Page page);
 
     int selectPageCount(Page page);
+
+    List<GoodsLocation> selectAll();
 }

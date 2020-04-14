@@ -25,4 +25,9 @@ public class GoodLocationServiceImpl implements GoodLocationService {
     public int selectPageCount(Page page) {
         return goodsLocationMapper.selectPageCount(page);
     }
+
+    @Override
+    public List<GoodsLocation> selectAll() {
+        return goodsLocationMapper.selectAll();
+    }
 }

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品添加</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+</head>
+<script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script th:inline="javascript">
+    var loginUrl = window.location.protocol + "//" + window.location.host + "/";
+    layui.use(['element', 'layer', 'jquery', 'form'], function () {
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+        //因此你需要在相应的地方，执行下述方法来进行渲染
+        form.render();
+    });
+
+    /*layui.use('laydate', function () {
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#birth' //指定元素
+        });
+    });*/
+    /*$("#roleIdSelect").each(function () {
+        // this代表的是<option></option>，对option再进行遍历
+        var roleId = $("#roleId").val()
+        $(this).children("option").each(function () {
+            // 判断需要对那个选项进行回显
+            if (this.value == roleId) {
+                console.log($(this).text());
+                // 进行回显
+                $(this).attr("selected", "selected");
+            }
+        });
+    })*/
+
+    layui.use(['element', 'layer', 'jquery', 'form'], function () {
+        var layer = layui.layer;
+        var $ = layui.$;
+        var form = layui.form;
+        $("#saveEdit").click(function () {
+            var data = form.val('editForm')
+            console.log(JSON.stringify(data))
+            console.log(data)
+            if ($("#adduploadGoodImg").val() == '') {
+                layer.msg("请上传头像", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+           /* console.log($('input[name="sex"]:checked').val())
+            console.log($("#city option:selected").val())
+            if ($("#city option:selected").val() == '') {
+                layer.msg("请选择住址", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            if ($("#roleIdSelect option:selected").val() == '') {
+                layer.msg("请选择角色", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }*/
+            $.ajax({
+                url: '/goodLocation/saveAdd',
+                type: 'post',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (result) {
+                    console.log(result.state);
+                    if (result.state == 0) {
+                        layer.msg("修改成功");
+                        var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
+                        parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+                        parent.layer.close(index);		//关闭窗口
+                    } else {
+                        layer.msg("添加失败")
+                    }
+                },
+                error: function () {
+                    layer.msg("添加成功")
+                }
+            })
+        })
+    })
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#addGoodsImg' //绑定元素
+            , url: '/uploadFile' //上传接口
+            , accept: 'images' //只允许上传图片
+            , acceptMime: 'image/png,image/jpeg,image/jpg' //只筛选图片
+            , done: function (res) { //上传后的回调
+                if (res.state == '0') {
+                    layer.msg("上传成功");
+                    console.log(res.data.filePath);
+                    $("#adduploadGoodImg").attr('value', res.data.filePath)
+                    // $("#demo1").attr('src',res.data.filePath)
+                    $("#addImg").attr('src', loginUrl + "showImage?imgUrl=" + res.data.filePath);
+                } else {
+                    layer.msg("上传失败");
+                }
+            }
+            //,accept: 'file' //允许上传的文件类型
+            //,size: 50 //最大允许上传的文件大小
+            //,……
+            , error: function () {
+                layer.msg("上传失败");
+            }
+        });
+        $("#cancelEdit").click(function () {
+            var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
+            parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
+            parent.layer.close(index);		//关闭窗口
+        })
+    });
+</script>
+<div>
+    <form class="layui-form" lay-filter="editForm" style="width: 500px; margin-left: 150px; margin-top: 10%">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="text-align: center;margin-top: 34px;">商品图片:</label>
+            <div class="layui-input-block">
+                <img class="layui-upload-img" id="addImg" style="width: 100px;height: 100px;">
+                <button type="button" class="layui-btn" id="addGoodsImg" style="margin-left: 20px; margin-top: 64px;">
+                    <i class="layui-icon">&#xe67c;</i>选择图片
+                </button>
+                <input id="adduploadGoodImg" name="gImgPath" type="hidden">
+            </div>
+        </div>
+        <div class="layui-form-item" style="margin-top: 20px;">
+            <label class="layui-form-label">商品名称:</label>
+            <div class="layui-input-block">
+                <input type="text" name="gName" lay-verify="gName" autocomplete="off" placeholder="请输入商品名称"
+                       class="layui-input" style="width: 100%;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品库存:</label>
+            <div class="layui-input-block">
+                <input id="man" type="number" name="gStock" lay-verify="gStock" autocomplete="off"
+                       placeholder="请输入商品库存(整数)" class="layui-input" style="width: 100%;">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择商品存放货架</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="goodLocation" lay-verify="required" lay-search="" name="gLocationId"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="" selected="">请选择商品存放货架</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input id="saveEdit" type="button" value="保存" lay-filter="saveEdit" class="layui-btn"
+                       style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em; margin-left: 30px;"/>
+                <input id="cancelEdit" type="button" value="取消" lay-filter="cancelEdit" class="layui-btn"
+                       style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em;margin-left: 100px;"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    layui.use(['element', 'layer', 'jquery', 'form'], function () {
+        var form = layui.form;
+        var $ = layui.$;
+
+        $(function () {
+            // GetGoodsCategoryToSel();
+            gLocation();
+        })
+
+        //获取商店
+        function gLocation() {
+            $.ajax({
+                url: "/goodLocation/selectGoodLocation",
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var goods=datas.data;
+                    if (datas.state == '1') {
+                        for(i=0;i<goods.length;i++) {
+                            var its = '<option value="' + goods[i].id + '">' + goods[i].lName + '</option>';
+                            selects += its;
+                        }
+                        $("#goodLocation").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
+    });
+</script>
+</html>

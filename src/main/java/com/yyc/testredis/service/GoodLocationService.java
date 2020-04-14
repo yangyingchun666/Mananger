@@ -9,4 +9,7 @@ public interface GoodLocationService {
     List<GoodsLocation> selectPageList(Page page);
 
     int selectPageCount(Page page);
+
+    List<GoodsLocation> selectAll();
+
 }
