@@ -6,6 +6,7 @@ import com.yyc.testredis.service.UserInfoService;
 import com.yyc.testredis.utils.CreateIDUtils;
 import com.yyc.testredis.utils.DESUtil;
 import com.yyc.testredis.utils.JsonResult;
+import com.yyc.testredis.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.OutputStream;
@@ -28,30 +28,42 @@ public class LoginController {
     Test1Service test1Service;
     @Autowired
     UserInfoService userInfoService;
+    @Autowired
+    RedisUtil redisUtil;
 
     /**
      * 登录进主页
-     * @param request
-     * @param session
      * @return
      */
     @PostMapping("/loginInto")
     @ResponseBody
-    public JsonResult login(HttpServletRequest request,HttpSession session){
+    public JsonResult login(){
         log.info("用户登录");
-        String username= (String) request.getSession().getAttribute("username");
-        String password= (String) request.getSession().getAttribute("password");
+        String username= (String) redisUtil.get("username");
+        String password= (String) redisUtil.get("password");
         log.info("username{}：",username);
         log.info("password{}：",password);
+        if("用户未注册".equals(username)){
+            redisUtil.del("username","password");
+            return new JsonResult(1,"用户未注册");
+        }else if("密码错误".equals(password)){
+            redisUtil.del("password","username");
+            return new JsonResult(1,"密码错误");
+        }
         String pwd=userInfoService.selectPwdByUsername(username);
+        UserInfo userInfo = userInfoService.selectByUsername(username);
         //DES解密
         DESUtil des=new DESUtil();
         String despassword = des.decryptStr(pwd);
-        log.info("解密后：",password);
+        log.info("解密后：",despassword);
         if(pwd==null || "".equals(pwd)){
             return new JsonResult(1,"用户未注册");
         }
         if(password.equals(despassword)){
+
+          redisUtil.set("username",username,3600);
+          redisUtil.set("password",password,3600);
+          redisUtil.set("roleId",userInfo.getRoleId(),3600);
             return new JsonResult(0,"登录成功");
         }else {
             return new JsonResult(1,"登录失败");
@@ -184,4 +196,21 @@ public class LoginController {
         }
     }
 
+    /**
+     * 退出登录
+     * @return
+     */
+    @GetMapping("/logOut")
+    public String logOut(){
+        log.info("用户退出登录");
+        String username= (String) redisUtil.get("username");
+        String password= (String) redisUtil.get("password");
+        log.info("username{}：",username);
+        log.info("password{}：",password);
+        redisUtil.del("username","password");
+        //重定向
+        return "redirect:/index/login";
+    }
+
 }
+
