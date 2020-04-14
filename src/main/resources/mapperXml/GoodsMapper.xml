@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyc.testredis.mapper.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.yyc.testredis.pojo.Goods" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="g_name" property="gName" jdbcType="VARCHAR" />
+    <result column="g_stock" property="gStock" jdbcType="INTEGER" />
+    <result column="g_sales_volume" property="gSalesVolume" jdbcType="INTEGER" />
+    <result column="g_location_id" property="gLocationId" jdbcType="VARCHAR" />
+    <result column="g_classfy_id" property="gClassfyId" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="l_name" property="gLocationName" jdbcType="VARCHAR" />
+    <result column="c_name" property="gClassfyName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, g_name, g_stock, g_sales_volume, g_location_id, g_classfy_id, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.yyc.testredis.pojo.GoodsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from goods
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.yyc.testredis.pojo.GoodsExample" >
+    delete from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.yyc.testredis.pojo.Goods" >
+    insert into goods (id, g_name, g_stock, 
+      g_sales_volume, g_location_id, g_classfy_id, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{gName,jdbcType=VARCHAR}, #{gStock,jdbcType=INTEGER}, 
+      #{gSalesVolume,jdbcType=INTEGER}, #{gLocationId,jdbcType=VARCHAR}, #{gClassfyId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyc.testredis.pojo.Goods" >
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gName != null" >
+        g_name,
+      </if>
+      <if test="gStock != null" >
+        g_stock,
+      </if>
+      <if test="gSalesVolume != null" >
+        g_sales_volume,
+      </if>
+      <if test="gLocationId != null" >
+        g_location_id,
+      </if>
+      <if test="gClassfyId != null" >
+        g_classfy_id,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="gName != null" >
+        #{gName,jdbcType=VARCHAR},
+      </if>
+      <if test="gStock != null" >
+        #{gStock,jdbcType=INTEGER},
+      </if>
+      <if test="gSalesVolume != null" >
+        #{gSalesVolume,jdbcType=INTEGER},
+      </if>
+      <if test="gLocationId != null" >
+        #{gLocationId,jdbcType=VARCHAR},
+      </if>
+      <if test="gClassfyId != null" >
+        #{gClassfyId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.yyc.testredis.pojo.GoodsExample" resultType="java.lang.Integer" >
+    select count(*) from goods
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update goods
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gName != null" >
+        g_name = #{record.gName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gStock != null" >
+        g_stock = #{record.gStock,jdbcType=INTEGER},
+      </if>
+      <if test="record.gSalesVolume != null" >
+        g_sales_volume = #{record.gSalesVolume,jdbcType=INTEGER},
+      </if>
+      <if test="record.gLocationId != null" >
+        g_location_id = #{record.gLocationId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.gClassfyId != null" >
+        g_classfy_id = #{record.gClassfyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update goods
+    set id = #{record.id,jdbcType=VARCHAR},
+      g_name = #{record.gName,jdbcType=VARCHAR},
+      g_stock = #{record.gStock,jdbcType=INTEGER},
+      g_sales_volume = #{record.gSalesVolume,jdbcType=INTEGER},
+      g_location_id = #{record.gLocationId,jdbcType=VARCHAR},
+      g_classfy_id = #{record.gClassfyId,jdbcType=VARCHAR},
+      CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyc.testredis.pojo.Goods" >
+    update goods
+    <set >
+      <if test="gName != null" >
+        g_name = #{gName,jdbcType=VARCHAR},
+      </if>
+      <if test="gStock != null" >
+        g_stock = #{gStock,jdbcType=INTEGER},
+      </if>
+      <if test="gSalesVolume != null" >
+        g_sales_volume = #{gSalesVolume,jdbcType=INTEGER},
+      </if>
+      <if test="gLocationId != null" >
+        g_location_id = #{gLocationId,jdbcType=VARCHAR},
+      </if>
+      <if test="gClassfyId != null" >
+        g_classfy_id = #{gClassfyId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyc.testredis.pojo.Goods" >
+    update goods
+    set g_name = #{gName,jdbcType=VARCHAR},
+      g_stock = #{gStock,jdbcType=INTEGER},
+      g_sales_volume = #{gSalesVolume,jdbcType=INTEGER},
+      g_location_id = #{gLocationId,jdbcType=VARCHAR},
+      g_classfy_id = #{gClassfyId,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectPageList" parameterType="com.yyc.testredis.utils.Page"
+          resultMap="BaseResultMap">
+    select
+    g.id, g_name , g.g_stock, g.g_sales_volume, g.g_location_id,
+     g.g_classfy_id, g.CREATE_TIME, g.UPDATE_TIME,cl.c_name,l.l_name
+    from goods g
+    left join goods_location l on g.g_location_id=l.id
+    left join classify cl on g.g_classfy_id=cl.id
+    <where>
+      1=1
+      <if test="keyWord!='' and keyType=='gName' ">
+        AND g_name like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='gClassfyName' ">
+        AND cl.c_name like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='gLocationName' ">
+        AND l.l_name like '%' #{keyWord} '%'
+      </if>
+    </where>
+    order by g.g_sales_volume asc
+    limit #{start},#{rows}
+  </select>
+
+  <!-- 通过条件分页查询，返回总记录数 -->
+  <select id="selectPageCount" parameterType="com.yyc.testredis.utils.Page" resultType="java.lang.Integer">
+    select count(1)
+    from goods g
+    left join goods_location l on g.g_location_id=l.id
+    left join classify cl on g.g_classfy_id=cl.id
+    <where>
+      1=1
+      <if test="keyWord!='' and keyType=='gName' ">
+        AND g_name like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='gClassfyName' ">
+        AND cl.c_name like '%' #{keyWord} '%'
+      </if>
+      <if test="keyWord!='' and keyType=='gLocationName' ">
+        AND l.l_name like '%' #{keyWord} '%'
+      </if>
+    </where>
+  </select>
+</mapper>

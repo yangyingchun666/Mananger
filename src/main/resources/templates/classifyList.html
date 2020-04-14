@@ -1,0 +1,205 @@
+<head>
+    <meta charset="utf-8">
+    <title>分类列表</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script>
+    function dateToStr(date) {
+        var time = new Date(date);
+        var y = time.getFullYear();
+        var M = time.getMonth() + 1;
+        M = M < 10 ? ("0" + M) : M;
+        var d = time.getDate();
+        d = d < 10 ? ("0" + d) : d;
+        var h = time.getHours();
+        h = h < 10 ? ("0" + h) : h;
+        var m = time.getMinutes();
+        m = m < 10 ? ("0" + m) : m;
+        var s = time.getSeconds();
+        s = s < 10 ? ("0" + s) : s;
+        var str = y + "-" + M + "-" + d + " " + h + ":" + m + ":" + s;
+        return str;
+    }
+
+    layui.use(['element', 'layer', 'jquery', 'form', 'table'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        //第一个实例
+        var classifyInfoDateGrid = table.render({
+            elem: '#classifyInfo',
+            url: '/classify/dataGrid'
+            , id: 'classifyInfoData'
+            , page: true //开启分页
+            , limit: 10
+            , cellMinWidth: 100
+            , limits: [10, 20, 30, 40, 50]
+            , initSort: {
+                field: 'id' //排序字段，对应 cols 设定的各字段名
+                , type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            }
+            // , toolbar: "#toolbarDemo"
+            , cols: [
+                [
+                    {type: 'checkbox'}
+                    , {field: 'id', title: 'ID', sort: true}
+                    , {field: 'cName', title: '分类名称', align: 'center'}
+                    , {field: 'cParentId', title: '上级分类名称'/*,edit:'text'*/, align: 'center'}
+                    , {
+                    field: 'createTime', title: '创建时间', sort: true, templet: function (d) {
+                        return dateToStr(d.createTime);
+                    }
+                }
+                    , {
+                    field: 'updateTime', title: '更新时间', sort: true, templet: function (d) {
+                        return dateToStr(d.updateTime);
+                    }
+                }
+                    , {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                ]
+            ]
+        });
+
+        //监听表格行点击
+        table.on('tr', function (obj) {
+            console.log(obj)
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(classifyInfo)', function (obj) {
+            console.log(obj)
+        });
+
+        //监听表格单选框选择
+        table.on('radio(classifyInfo)', function (obj) {
+            console.log(obj)
+        });
+
+        //监听单元格编辑
+        table.on('edit(classifyInfo)', function (obj) {
+            var value = obj.value //得到修改后的值
+                , data = obj.data //得到所在行所有键值
+                , field = obj.field; //得到字段
+            console.log("value=" + value)
+            console.log("data=" + JSON.stringify(data))
+            console.log("field=" + field)
+        });
+
+        /**
+         * 搜索框载
+         * @type {pe}
+         */
+        var $ = layui.$, active = {
+            reload: function () {
+                var keyWord = $('#searchReload').val();
+                var keyType = $("#key_type option:selected").val();
+                //执行重载
+                table.reload('classifyInfoData', {
+                    method: 'post',
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        keyWord: keyWord,
+                        keyType: keyType
+                    }
+                });
+            }
+        };
+        $('.searchBtn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+        //自定义工具栏监听事件
+        table.on('toolbar(classifyInfo)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getSelect':
+                    layer.msg("这是查询", {icon: 6, anim: 6});
+                    break;
+                case 'getInsert':
+                    layer.msg("这是新增", {icon: 6, anim: 6});
+                    break;
+                case 'getUpdate':
+                    layer.msg("这是修改", {icon: 6, anim: 6});
+                    break;
+                case 'getDelete':
+                    layer.msg("这是删除", {icon: 6, anim: 6});
+                    break;
+                case 'getRefresh':
+                    layer.msg("这是刷新", {icon: 6, anim: 6});
+                    location.reload();
+                    break;
+            }
+        });
+        //监听工具条
+        table.on('tool(classifyInfo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.msg('ID：' + data.id + ' 的查看操作');
+            } else if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                layer.open({
+                    type: 2,
+                    title: "编辑页面", //不显示标题栏
+                    closeBtn: 2,
+                    offset: ['5%', '25%'],//设置位移
+                    area: ['900px', '700px'],
+                    // btn: ['保存', '取消'],
+                    content: '/classifyInfo/editData?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
+            }
+        });
+    })
+    ;
+</script>
+<!--<script type="text/html" id="toolbarDemo">-->
+<!--    <div class="layui-btn-container">-->
+<!--        <button class="layui-btn layui-btn-sm" lay-event="getSelect">查询</button>-->
+<!--        <button class="layui-btn layui-btn-sm" lay-event="getInsert">新增</button>-->
+<!--        <button class="layui-btn layui-btn-sm" lay-event="getUpdate">修改</button>-->
+<!--        <button class="layui-btn layui-btn-sm" lay-event="getDelete">删除</button>-->
+<!--        <button class="layui-btn layui-btn-sm" lay-event="getRefresh">刷新</button>-->
+<!--    </div>-->
+<!--</script>-->
+<!--    表格工作列-->
+<script type="text/html" id="barDemo">
+    <a id="edit" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<div class="searchTable">
+    <div >
+    <span>
+       搜索:
+    </span>
+        <div class="layui-inline">
+            <input class="layui-input" name="keyWord" id="searchReload" autocomplete="off" style="width: 300px;"
+                   placeholder="请输入关键词并选择对应类型">
+        </div>
+        <span class="layui-input-block" style="margin-left: 0px;">
+        选择搜索类型:
+                 <select name="keyType" id="key_type" class="layui-select"
+                         style="width: 100px; background-color: aquamarine">
+                <option value="cName" selected="selected">分类名称</option>
+<!--                <option value="sign">姓名</option>-->
+<!--                <option value="phone">手机号</option>-->
+<!--                <option value="city">城市</option>-->
+<!--                <option value="sex">性别</option>-->
+            </select>
+    </span>
+        <button class="layui-btn searchBtn" data-type="reload">搜索</button>
+    </div>
+
+    <table id="classifyInfo" lay-filter="classifyInfo"></table>
+</div>
+

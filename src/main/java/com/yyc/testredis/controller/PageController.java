@@ -1,6 +1,5 @@
 package com.yyc.testredis.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.yyc.testredis.pojo.Banner;
 import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.BannerService;
@@ -85,6 +84,36 @@ public class PageController {
     @RequestMapping("/userRoleInfoPage")
     public String userRoleInfoPage() {
         return "roleInfoList";
+    }
+
+    /**
+     * 分类管理页面
+     *
+     * @return
+     */
+    @RequestMapping("/classifyListPage")
+    public String classifyInfoPage() {
+        return "classifyList";
+    }
+
+    /**
+     * 商品位置管理页面
+     *
+     * @return
+     */
+    @RequestMapping("/goodLocationPage")
+    public String goodLocationInfoPage() {
+        return "goodLocation";
+    }
+
+    /**
+     * 商品位置管理页面
+     *
+     * @return
+     */
+    @RequestMapping("/goodsInfoPage")
+    public String goodsInfoPage() {
+        return "goodsList";
     }
 
 }

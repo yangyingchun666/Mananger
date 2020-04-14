@@ -1,7 +1,5 @@
 package com.yyc.testredis.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.yyc.testredis.pojo.Test1;
 import com.yyc.testredis.pojo.UserInfo;
 import com.yyc.testredis.service.Test1Service;
 import com.yyc.testredis.service.UserInfoService;
@@ -45,7 +43,7 @@ public class UserInfoController {
      */
     @RequestMapping("/dataGrid")
     @ResponseBody
-    public ResultMap<List<Test1>> backContent(Page page, @RequestParam("limit") int limit) {
+    public ResultMap<List<UserInfoVO>> backContent(Page page, @RequestParam("limit") int limit) {
         log.info("limit{}", limit);
         log.info("page{}", page.toString());
         page.setRows(limit);
