@@ -16,66 +16,128 @@
         form.render();
     });
 
-    /*layui.use('laydate', function () {
-        var laydate = layui.laydate;
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#birth' //指定元素
-        });
-    });*/
-    /*$("#roleIdSelect").each(function () {
-        // this代表的是<option></option>，对option再进行遍历
-        var roleId = $("#roleId").val()
-        $(this).children("option").each(function () {
-            // 判断需要对那个选项进行回显
-            if (this.value == roleId) {
-                console.log($(this).text());
-                // 进行回显
-                $(this).attr("selected", "selected");
-            }
-        });
-    })*/
-
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
         var layer = layui.layer;
         var $ = layui.$;
         var form = layui.form;
-        $("#saveEdit").click(function () {
-            var data = form.val('editForm')
-            console.log(JSON.stringify(data))
-            console.log(data)
-            if ($("#adduploadGoodImg").val() == '') {
+
+
+        // 商品名称验证
+        $("#gName").blur(function () {
+            console.log($("#gName").val())
+            var sign = $("#gName").val();
+            if(sign==''){
+                layer.msg("商品名称不能为空", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return false;
+            }
+        });
+        //商品库存验证
+        $("#gStock").blur(function () {
+            console.log($("#gStock").val())
+            var gStock = $("#gStock").val();
+            if(gStock==''){
+                layer.msg("商品库存不能为空", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return false;
+            }
+            if(!(/(^[1-9]\d*$)/.test(gStock))){
+                layer.msg("商品库存只能为正整数", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return false;
+            }
+        });
+        $("#adduploadGoodImg").blur(function () {
+            console.log($("#adduploadGoodImg").val())
+            var adduploadGoodImg = $("#adduploadGoodImg").val();
+            if (adduploadGoodImg == '') {
                 layer.msg("请上传头像", {
                     "icon": 2,
                     "time": 2000
                 });
-                return;
+                return false;
             }
-           /* console.log($('input[name="sex"]:checked').val())
-            console.log($("#city option:selected").val())
-            if ($("#city option:selected").val() == '') {
-                layer.msg("请选择住址", {
+            return true;
+        });
+
+        $("#saveAddGoods").click(function () {
+            // // var data = form.val('AddGoodsForm')
+            // var fields = $('#AddGoodsForm').serializeArray();
+            // var data = {}; //声明一个对象
+            // $.each(fields, function(index, field) {
+            //     data[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
+            // })
+            // console.log(data)
+            // console.log(JSON.stringify(data))
+
+            if ($("#adduploadGoodImg").val() == '') {
+                layer.msg("请上传商品图片", {
                     "icon": 2,
                     "time": 2000
                 });
                 return;
             }
-            if ($("#roleIdSelect option:selected").val() == '') {
-                layer.msg("请选择角色", {
+            if ($("#gName").val() == '') {
+                layer.msg("请输入商品名称", {
                     "icon": 2,
                     "time": 2000
                 });
                 return;
-            }*/
-            $.ajax({
-                url: '/goodLocation/saveAdd',
-                type: 'post',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
+            }
+            if ($("#gStock").val() == '') {
+                layer.msg("请输入库存数量", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            if ($("#goodLocation").val() == '') {
+                layer.msg("请选择商品存放货架", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            if ($("#levelOne").val() == '') {
+                layer.msg("请选择一级分类", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            if ($("#levelTwo").val() == '') {
+                layer.msg("请选择二级分类", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            if ($("#levelThree").val() == '') {
+                layer.msg("请选择三级分类", {
+                    "icon": 2,
+                    "time": 2000
+                });
+                return;
+            }
+            var gImgPath = $("#addUploadGoodImg").val();
+            var gName = $("#gName").val();
+            var gStock = $("#gStock").val();
+            var goodLocation = $("#goodLocation").val();
+            var levelOne = $("#levelOne").val();
+            var levelTwo = $("#levelTwo").val();
+            var levelThree = $("#levelThree").val();
+           $.ajax({
+                url: '/goods/saveAddGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&levelOne='+levelOne+'&levelTwo='+levelTwo+'&levelThree='+levelThree,
                 success: function (result) {
                     console.log(result.state);
                     if (result.state == 0) {
-                        layer.msg("修改成功");
+                        layer.msg("添加成功");
                         var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
                         parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
                         parent.layer.close(index);		//关闭窗口
@@ -84,7 +146,7 @@
                     }
                 },
                 error: function () {
-                    layer.msg("添加成功")
+                    layer.msg("添加失败")
                 }
             })
         })
@@ -99,10 +161,10 @@
             , accept: 'images' //只允许上传图片
             , acceptMime: 'image/png,image/jpeg,image/jpg' //只筛选图片
             , done: function (res) { //上传后的回调
-                if (res.state == '0') {
+                if (res.state == 0) {
                     layer.msg("上传成功");
                     console.log(res.data.filePath);
-                    $("#adduploadGoodImg").attr('value', res.data.filePath)
+                    $("#addUploadGoodImg").attr('value', res.data.filePath);
                     // $("#demo1").attr('src',res.data.filePath)
                     $("#addImg").attr('src', loginUrl + "showImage?imgUrl=" + res.data.filePath);
                 } else {
@@ -124,7 +186,7 @@
     });
 </script>
 <div>
-    <form class="layui-form" lay-filter="editForm" style="width: 500px; margin-left: 150px; margin-top: 10%">
+    <form id="AddGoodsForm" class="layui-form" lay-filter="AddGoodsForm" style="width: 500px; margin-left: 150px; margin-top: 10%" name="AddGoodsForm">
         <div class="layui-form-item">
             <label class="layui-form-label" style="text-align: center;margin-top: 34px;">商品图片:</label>
             <div class="layui-input-block">
@@ -132,20 +194,20 @@
                 <button type="button" class="layui-btn" id="addGoodsImg" style="margin-left: 20px; margin-top: 64px;">
                     <i class="layui-icon">&#xe67c;</i>选择图片
                 </button>
-                <input id="adduploadGoodImg" name="gImgPath" type="hidden">
+                <input id="addUploadGoodImg" name="gImgPathAdd" type="hidden">
             </div>
         </div>
         <div class="layui-form-item" style="margin-top: 20px;">
             <label class="layui-form-label">商品名称:</label>
             <div class="layui-input-block">
-                <input type="text" name="gName" lay-verify="gName" autocomplete="off" placeholder="请输入商品名称"
+                <input type="text" name="gNameAdd" placeholder="请输入商品名称" id="gName" lay-verify="required"
                        class="layui-input" style="width: 100%;">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">商品库存:</label>
             <div class="layui-input-block">
-                <input id="man" type="number" name="gStock" lay-verify="gStock" autocomplete="off"
+                <input id="gStock" type="number" name="gStockAdd" lay-verify="required"
                        placeholder="请输入商品库存(整数)" class="layui-input" style="width: 100%;">
 
             </div>
@@ -154,32 +216,131 @@
             <label class="layui-form-label">选择商品存放货架</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
-                    <select id="goodLocation" lay-verify="required" lay-search="" name="gLocationId"
+                    <select id="goodLocation" lay-verify="required" lay-search="" name="gLocationIdAdd"
                             style="width: 100%;" class="layui-form-select">
                         <option value="" selected="">请选择商品存放货架</option>
                     </select>
                 </div>
             </div>
         </div>
+        <span style="margin-left: 110px;font-family: cursive;font-size: larger;font-weight: bolder;"> 选择商品分类:</span>
+        <div class="layui-form-item">
+            <label class="layui-form-label">一级分类</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="levelOne" lay-verify="required" lay-search="" name="levelOne"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="" selected="">请选择商品一级分类</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">二级分类</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="levelTwo" lay-verify="required" lay-search="" name="levelTwo"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="" selected="">请选择商品二级分类</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">三级分类</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="levelThree" lay-verify="required" lay-search="" name="levelThree"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="" selected="">请选择商品三级分类</option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <input id="saveEdit" type="button" value="保存" lay-filter="saveEdit" class="layui-btn"
+                <input id="saveAddGoods" type="button" value="保存" lay-filter="saveAddGoods" class="layui-btn"
                        style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em; margin-left: 30px;"/>
                 <input id="cancelEdit" type="button" value="取消" lay-filter="cancelEdit" class="layui-btn"
                        style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em;margin-left: 100px;"/>
             </div>
         </div>
     </form>
+
 </div>
 <script type="text/javascript">
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
         var form = layui.form;
         var $ = layui.$;
-
+        var levelOne=1;
+        var levelTwo=2;
+        var levelThree=3;
         $(function () {
-            // GetGoodsCategoryToSel();
             gLocation();
+            getClassifyLevelOne(levelOne);
+            getClassifyLevelTwo(levelTwo);
+            getClassifyLevelThree(levelThree);
         })
+        function getClassifyLevelOne(levelOne) {
+            console.log("one="+levelOne)
+            $.ajax({
+                url: "/classify/selectClassifyLevel?level="+levelOne,
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var classifyLevel = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < classifyLevel.length; i++) {
+                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            selects += its;
+                        }
+                        $("#levelOne").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
+        function getClassifyLevelTwo(levelTwo) {
+            console.log("two="+levelTwo)
+            $.ajax({
+                url: "/classify/selectClassifyLevel?level="+levelTwo,
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var classifyLevel = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < classifyLevel.length; i++) {
+                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            selects += its;
+                        }
+                        $("#levelTwo").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
+        function getClassifyLevelThree(levelThree) {
+            console.log("three="+levelThree)
+            $.ajax({
+                url: "/classify/selectClassifyLevel?level="+levelThree,
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var classifyLevel = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < classifyLevel.length; i++) {
+                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            selects += its;
+                        }
+                        $("#levelThree").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
 
         //获取商店
         function gLocation() {
@@ -189,9 +350,9 @@
                 dataType: "json",
                 success: function (datas) {
                     var selects = '';
-                    var goods=datas.data;
-                    if (datas.state == '1') {
-                        for(i=0;i<goods.length;i++) {
+                    var goods = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < goods.length; i++) {
                             var its = '<option value="' + goods[i].id + '">' + goods[i].lName + '</option>';
                             selects += its;
                         }
@@ -203,4 +364,12 @@
         }
     });
 </script>
+<style type="text/css">
+    .layui-form-select{
+        width: 392px;
+    }
+    .layui-select-title{
+        width: 392px;
+    }
+</style>
 </html>

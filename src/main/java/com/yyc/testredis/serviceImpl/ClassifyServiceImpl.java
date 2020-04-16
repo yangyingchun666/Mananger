@@ -26,4 +26,9 @@ public class ClassifyServiceImpl implements ClassifyService {
     public int selectPageCount(Page page) {
         return classifyMapper.selectPageCount(page);
     }
+
+    @Override
+    public List<Classify> selectClassifyByLevel(Integer level) {
+        return classifyMapper.selectClassifyByLevel(level);
+    }
 }

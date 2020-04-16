@@ -55,7 +55,7 @@
                     , {field: 'gStock', title: '商品库存(件)'/*,edit:'text'*/, align: 'center'}
                     , {field: 'gSalesVolume', title: '商品销量(件)', align: 'center'}
                     , {field: 'gLocationId', title: '商品位置ID', align: 'center',hidden:true}
-                    , {field: 'gLocationName', title: '商品位置ID', align: 'center'}
+                    , {field: 'gLocationName', title: '商品位置名称', align: 'center'}
                     , {field: 'gClassfyId', title: '商品分类Id', align: 'center' ,hidden:true}
                     , {field: 'gClassfyName', title: '商品分类名称', align: 'center'}
                     , {
@@ -154,8 +154,19 @@
                 layer.msg('ID：' + data.id + ' 的查看操作');
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    $.ajax({
+                        url:'/goods/delete?id='+data.id,
+                        success:function (result){
+                            if(result.state==0){
+                                obj.del();
+                                layer.close(index);
+                                layer.msg("删除成功", {icon: 4, anim: 4})
+                            }
+                        },
+                        error: function () {
+                          layer.msg("删除失败", {icon: 4, anim: 4})
+                        }
+                    })
                 });
             }
         });

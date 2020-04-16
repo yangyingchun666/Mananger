@@ -2,6 +2,7 @@ package com.yyc.testredis.controller;
 
 import com.yyc.testredis.pojo.Classify;
 import com.yyc.testredis.service.ClassifyService;
+import com.yyc.testredis.utils.JsonResult;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.ResultMap;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class ClassifyController {
     ClassifyService classifyService;
 
     /**
-     * layui-数据表格接口
+     * 商品分类列表-数据表格接口
      *
      * @return
      */
@@ -41,5 +42,19 @@ public class ClassifyController {
         int totals = classifyService.selectPageCount(page);
         page.setTotalRecord(totals);
         return new ResultMap("成功", contentList, 0, totals);
+    }
+
+    /**
+     *  添加商品页面查询分类
+     * @param level
+     * @return
+     */
+    @RequestMapping("/selectClassifyLevel")
+    @ResponseBody
+    public JsonResult selectClassifyLevel(@RequestParam("level") Integer level){
+        log.info("根据分类级别查询分类列表,参数level=[]",level);
+        List<Classify> classifyList=classifyService.selectClassifyByLevel(level);
+        return new JsonResult(0,"成功",classifyList);
+
     }
 }

@@ -27,4 +27,14 @@ public class GoodsServiceImpl implements GoodsService {
     public int selectPageCount(Page page) {
         return goodsMapper.selectPageCount(page);
     }
+
+    @Override
+    public Integer insert(Goods goods) {
+        return goodsMapper.insertSelective(goods);
+    }
+
+    @Override
+    public Integer deleteById(String id) {
+        return goodsMapper.deleteByPrimaryKey(id);
+    }
 }

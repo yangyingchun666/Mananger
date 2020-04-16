@@ -315,6 +315,66 @@ public class ClassifyExample {
             return (Criteria) this;
         }
 
+        public Criteria andCLevelFlagIsNull() {
+            addCriterion("c_level_flag is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagIsNotNull() {
+            addCriterion("c_level_flag is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagEqualTo(Integer value) {
+            addCriterion("c_level_flag =", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagNotEqualTo(Integer value) {
+            addCriterion("c_level_flag <>", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagGreaterThan(Integer value) {
+            addCriterion("c_level_flag >", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagGreaterThanOrEqualTo(Integer value) {
+            addCriterion("c_level_flag >=", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagLessThan(Integer value) {
+            addCriterion("c_level_flag <", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagLessThanOrEqualTo(Integer value) {
+            addCriterion("c_level_flag <=", value, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagIn(List<Integer> values) {
+            addCriterion("c_level_flag in", values, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagNotIn(List<Integer> values) {
+            addCriterion("c_level_flag not in", values, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagBetween(Integer value1, Integer value2) {
+            addCriterion("c_level_flag between", value1, value2, "cLevelFlag");
+            return (Criteria) this;
+        }
+
+        public Criteria andCLevelFlagNotBetween(Integer value1, Integer value2) {
+            addCriterion("c_level_flag not between", value1, value2, "cLevelFlag");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("CREATE_TIME is null");
             return (Criteria) this;

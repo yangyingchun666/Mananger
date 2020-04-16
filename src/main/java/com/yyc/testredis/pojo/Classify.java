@@ -9,6 +9,8 @@ public class Classify {
 
     private String cParentId;
 
+    private Integer cLevelFlag;
+
     private Date createTime;
 
     private Date updateTime;
@@ -35,6 +37,14 @@ public class Classify {
 
     public void setcParentId(String cParentId) {
         this.cParentId = cParentId == null ? null : cParentId.trim();
+    }
+
+    public Integer getcLevelFlag() {
+        return cLevelFlag;
+    }
+
+    public void setcLevelFlag(Integer cLevelFlag) {
+        this.cLevelFlag = cLevelFlag;
     }
 
     public Date getCreateTime() {

@@ -9,4 +9,6 @@ public interface ClassifyService {
     List<Classify> selectPageList(Page page);
 
     int selectPageCount(Page page);
+
+    List<Classify> selectClassifyByLevel(Integer level);
 }

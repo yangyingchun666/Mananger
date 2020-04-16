@@ -20,49 +20,62 @@ public class CreateIDUtils {
     }
 
     /**
-     * 提供生成cardId方法
-     *
-     * @return
+     * @Description: GoodsId生成
+     * 
+     * @author Anakin Yang
+     * @date 2020/4/15 13:42
+     * @param 
+     * @return  String
      */
-    public static String  generateCardId(){
+    public static String  genGoodsId(){
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
         String time = sdf1.format(new Date());
         Random r = new Random();
         int k = r.nextInt(999);
-        return  "C" + time + String.format("%03d", k);
-    }
-
-    //生成库存信息表id
-    public static String  createCarStockId(){
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
-        String time = sdf1.format(new Date());
-        Random r = new Random();
-        int k = r.nextInt(999);
-        return  "S" + time + String.format("%03d", k);
-    }
-
-    //生成商务政策表id
-    public static String  createBusinessPolicyId(){
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
-        String time = sdf1.format(new Date());
-        Random r = new Random();
-        int k = r.nextInt(999);
-        return  "B" + time + String.format("%03d", k);
-    }
-
-    //生成库存详细信息表id
-    public static String  createCarStockDetailId(){
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
-        String time = sdf1.format(new Date());
-        Random r = new Random();
-        int k = r.nextInt(999);
-        return  "SD" + time + String.format("%03d", k);
+        return  "G" + time + String.format("%03d", k);
     }
 
     /**
-     *  id生成
+     * @Description: UserId生成
+     *
+     * @author Anakin Yang
+     * @date 2020/4/15 13:41
+     * @param
+     * @return String
      */
-    public static long genItemId() {
+    public static String  genUserId(){
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = sdf1.format(new Date());
+        Random r = new Random();
+        int k = r.nextInt(999);
+        return  "U" + time + String.format("%03d", k);
+    }
+
+    /**
+     * @Description: GoodLocationId 生成
+     *
+     * @author Anakin Yang
+     * @date 2020/4/15 13:43
+     * @param
+     * @return String
+     */
+    public static String  genGoodLocationId(){
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = sdf1.format(new Date());
+        Random r = new Random();
+        int k = r.nextInt(999);
+        return  "L" + time + String.format("%03d", k);
+    }
+
+    /**
+     * @Description: Long类型id生成
+     *
+     * @author Anakin Yang
+     * @date 2020/4/15 13:45
+     * @param
+     * @return Long
+     */
+    public static long genLongId() {
         //取当前时间的长整形值包含毫秒
         long millis = System.currentTimeMillis();
         //加上两位随机数
@@ -72,10 +85,16 @@ public class CreateIDUtils {
         long id = new Long(str);
         return id;
     }
+
     /**
-     *  id生成
+     * @Description: String类型id生成
+     *
+     * @author Anakin Yang
+     * @date 2020/4/15 13:46
+     * @param
+     * @return String
      */
-    public static String genUsualId() {
+    public static String genStringId() {
         //取当前时间的长整形值包含毫秒
         long millis = System.currentTimeMillis();
         //加上两位随机数
@@ -85,10 +104,18 @@ public class CreateIDUtils {
         return str;
     }
 
-    public static String genPrimaryKeyId(String type) {
+    /**
+     * @Description: 自定义前缀 ID生成
+     *
+     * @author Anakin Yang
+     * @date 2020/4/15 13:47
+     * @param string
+     * @return String
+     */
+    public static String genUserWriteId(String string) {
         String time = DateUtils.formatDate(DateUtils.YYYYMMDDHHMMSS,new Date());
         Random r = new Random();
         int k = r.nextInt(999);
-        return  type + time + String.format("%03d", k);
+        return  string + time + String.format("%03d", k);
     }
 }

@@ -13,7 +13,7 @@ public interface GoodsMapper {
 
     int deleteByExample(GoodsExample example);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(@Param("id") String id);
 
     int insert(Goods record);
 

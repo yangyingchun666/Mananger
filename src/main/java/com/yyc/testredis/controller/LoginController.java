@@ -61,9 +61,9 @@ public class LoginController {
         }
         if(password.equals(despassword)){
 
-          redisUtil.set("username",username,3600);
-          redisUtil.set("password",password,3600);
-          redisUtil.set("roleId",userInfo.getRoleId(),3600);
+          redisUtil.set("username",username,7200);
+          redisUtil.set("password",password,7200);
+          redisUtil.set("roleId",userInfo.getRoleId(),7200);
             return new JsonResult(0,"登录成功");
         }else {
             return new JsonResult(1,"登录失败");
@@ -130,7 +130,7 @@ public class LoginController {
         DESUtil des=new DESUtil();
         String password = des.encryptStr(userInfo.getPassword());
         log.info("加密后password{}",password);
-        userInfo.setId(CreateIDUtils.genUsualId());
+        userInfo.setId(CreateIDUtils.genUserId());
         userInfo.setPassword(password);
         userInfo.setCreateTime(new Date());
         userInfo.setUpdateTime(new Date());

@@ -2,15 +2,16 @@ package com.yyc.testredis.controller;
 
 import com.yyc.testredis.pojo.Goods;
 import com.yyc.testredis.service.GoodsService;
+import com.yyc.testredis.utils.CreateIDUtils;
+import com.yyc.testredis.utils.JsonResult;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.ResultMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -40,11 +41,69 @@ public class GoodsController {
     }
 
     /**
-     * 编辑页面
+     * 添加页面
      */
     @RequestMapping("/addGoods")
     public String editDataPage() {
         log.info("商品添加页面");
         return "addPage/goodsAdd";
+    }
+
+
+    /**
+     * @param
+     * @return
+     * @Description: 添加商品
+     * @author Anakin Yang
+     * @date 2020/4/15 12:06
+     */
+    @RequestMapping("/saveAddGoods")
+    @ResponseBody
+    public JsonResult saveAddGoods(@RequestParam("gImgPath") String gImgPath,@RequestParam("gName")String gName,
+                                   @RequestParam("gStock")Integer gStock,@RequestParam("goodLocation")String goodLocation,
+                                   @RequestParam("levelOne")String levelOne,@RequestParam("levelTwo")String levelTwo,
+                                   @RequestParam("levelThree")String levelThree) {
+        log.info("添加商品,参数:gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree{}",gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree);
+        /**
+         *  封装参数
+         **/
+        Goods goods = new Goods();
+        goods.setId(CreateIDUtils.genGoodsId());
+        goods.setgName(gName);
+        goods.setgName(gName);
+        goods.setgImgPath(gImgPath);
+        goods.setgLocationId(goodLocation);
+        goods.setgSalesVolume(0);
+        goods.setgStock(gStock);
+        goods.setgClassfyId(levelThree);
+        goods.setCreateTime(new Date());
+        goods.setUpdateTime(new Date());
+        Integer rows = 0;
+        rows = goodsService.insert(goods);
+        if(rows <1){
+            return new JsonResult(1,"失败");
+        }else {
+            return new JsonResult(0, "成功");
+        }
+    }
+
+    /**
+     * @Description: 删除商品
+     *
+     * @author Anakin Yang
+     * @date 2020/4/16 9:47
+     * @param id
+     * @return JsonResult
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    public JsonResult delete(@RequestParam("id") String id){
+        log.info("删除商品，id{}",id);
+        Integer rows=goodsService.deleteById(id);
+        if(rows<1 ){
+            return new JsonResult(1,"删除失败");
+        }else {
+            return new JsonResult(0,"删除成功");
+        }
     }
 }

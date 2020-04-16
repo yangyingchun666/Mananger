@@ -33,4 +33,6 @@ public interface ClassifyMapper {
     List<Classify> selectPageList(Page page);
 
     int selectPageCount(Page page);
+
+    List<Classify> selectClassifyByLevel(@Param("level") Integer level);
 }

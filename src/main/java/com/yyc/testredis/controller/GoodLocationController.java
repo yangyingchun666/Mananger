@@ -48,7 +48,7 @@ public class GoodLocationController {
     public JsonResult selectGoodLocation() {
         log.info("查询货架列表");
         List<GoodsLocation> contentList = goodLocationService.selectAll();
-        return new JsonResult(1,"成功",contentList);
+        return new JsonResult(0,"成功",contentList);
     }
 
 

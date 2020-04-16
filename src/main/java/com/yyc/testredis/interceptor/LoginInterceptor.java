@@ -98,8 +98,8 @@ public class LoginInterceptor implements HandlerInterceptor {
                 //DES解密
                 if (pwd == null) {
                     log.info("没有注册的");
-                    redisUtil.set("username", "用户未注册", 3600);
-                    redisUtil.set("password", "用户未注册", 3600);
+                    redisUtil.set("username", "用户未注册", 7200);
+                    redisUtil.set("password", "用户未注册", 7200);
                     return true;
                 }
                 DESUtil des = new DESUtil();
@@ -107,13 +107,13 @@ public class LoginInterceptor implements HandlerInterceptor {
                 log.info("解密后：", password);
                 if (password.equals(reqpassword)) {
                     log.info("验证通过时");
-                    redisUtil.set("username", requsername, 3600);
-                    redisUtil.set("password", password, 3600);
+                    redisUtil.set("username", requsername, 7200);
+                    redisUtil.set("password", password, 7200);
                     return true;
                 } else {
                     log.info("密码错误的");
-                    redisUtil.set("username", requsername, 3600);
-                    redisUtil.set("password", "密码错误", 3600);
+                    redisUtil.set("username", requsername, 7200);
+                    redisUtil.set("password", "密码错误", 7200);
                     return true;
                 }
             } else {
