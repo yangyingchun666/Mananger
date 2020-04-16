@@ -30,4 +30,24 @@ public class GoodLocationServiceImpl implements GoodLocationService {
     public List<GoodsLocation> selectAll() {
         return goodsLocationMapper.selectAll();
     }
+
+    @Override
+    public Integer insert(GoodsLocation goodsLocation) {
+        return goodsLocationMapper.insertSelective(goodsLocation);
+    }
+
+    @Override
+    public int delete(String id) {
+        return goodsLocationMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int update(GoodsLocation goodsLocation) {
+        return goodsLocationMapper.updateByPrimaryKeySelective(goodsLocation);
+    }
+
+    @Override
+    public GoodsLocation selectById(String id) {
+        return goodsLocationMapper.selectByPrimaryKey(id);
+    }
 }

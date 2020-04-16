@@ -12,4 +12,11 @@ public interface GoodLocationService {
 
     List<GoodsLocation> selectAll();
 
+    Integer insert(GoodsLocation goodsLocation);
+
+    int delete(String id);
+
+    int update(GoodsLocation goodsLocation);
+
+    GoodsLocation selectById(String id);
 }

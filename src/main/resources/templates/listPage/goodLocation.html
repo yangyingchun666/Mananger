@@ -28,6 +28,7 @@
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+        var $=layer.$;
         //第一个实例
         var goodLocationInfoDateGrid = table.render({
             elem: '#goodLocationInfo',
@@ -47,7 +48,13 @@
                     {type: 'checkbox'}
                     , {field: 'id', title: 'ID', sort: true}
                     , {field: 'lName', title: '位置名称', align: 'center'}
-                    , {field: 'lOld', title: '旧位置'/*,edit:'text'*/, align: 'center'}
+                    , {field: 'lOld', title: '旧位置'/*,edit:'text'*/, align: 'center',templet:function (d) {
+                        if(d.lOld==null ||d.lOld==''){
+                            return "<span>未移动</span>";
+                        }else {
+                            return d.lOld;
+                        }
+                    }}
                     , {field: 'lNew', title: '新位置'/*,edit:'text'*/, align: 'center'}
                     , {
                     field: 'createTime', title: '创建时间', sort: true, templet: function (d) {
@@ -145,8 +152,22 @@
                 layer.msg('ID：' + data.id + ' 的查看操作');
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    $.ajax({
+                        url:'/goodLocation/delete?id='+data.id,
+                        success:function (result) {
+                            if(result.state==0){
+                                obj.del();
+                                layer.msg("删除成功", {icon: 4, anim: 4})
+                                layer.close(index);
+                            }else {
+                                layer.msg("删除失败", {icon: 4, anim: 4})
+                            }
+                        },
+                        error: function () {
+                            layer.msg("删除失败", {icon: 4, anim: 4})
+                        }
+                    })
+
                 });
             } else if (obj.event === 'edit') {
                 // layer.alert('编辑行：<br>' + JSON.stringify(data))
@@ -155,25 +176,26 @@
                     title: "编辑页面", //不显示标题栏
                     closeBtn: 2,
                     offset: ['5%', '25%'],//设置位移
-                    area: ['900px', '700px'],
+                    area: ['700px', '500px'],
                     // btn: ['保存', '取消'],
-                    content: '/goodLocationInfo/editData?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: '/goodLocation/editGoodLocationPage?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
             }
         });
-    })
-    ;
+        $("#addGoodLocation").click(function () {
+            layer.open({
+                type: 2,
+                title: "货架添加页面", //不显示标题栏
+                closeBtn: 2,
+                offset: ['5%', '25%'],//设置位移
+                area: ['700px', '500px'],
+                content: '/goodLocation/addGoodLocationPage', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            });
+
+        })
+    });
+
 </script>
-<!--<script type="text/html" id="toolbarDemo">-->
-<!--    <div class="layui-btn-container">-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getSelect">查询</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getInsert">新增</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getUpdate">修改</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getDelete">删除</button>-->
-<!--        <button class="layui-btn layui-btn-sm" lay-event="getRefresh">刷新</button>-->
-<!--    </div>-->
-<!--</script>-->
-<!--    表格工作列-->
 <script type="text/html" id="barDemo">
     <a id="edit" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -197,6 +219,7 @@
             </select>
     </span>
         <button class="layui-btn searchBtn" data-type="reload">搜索</button>
+        <button class="layui-btn addBtn"  id="addGoodLocation">新增货架</button>
     </div>
 
     <table id="goodLocationInfo" lay-filter="goodLocationInfo"></table>

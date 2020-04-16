@@ -113,7 +113,12 @@ public class GoodsController {
 
 
     /**
-     * 添加页面
+     * @Description: 商品修改页面
+     *
+     * @author Anakin Yang
+     * @date 2020/4/16 11:53
+     * @param
+     * @return
      */
     @RequestMapping("/editGoods")
     public String editGoodsPage(Model model, @RequestParam("id") String id) {

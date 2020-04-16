@@ -12,7 +12,7 @@ public interface GoodsLocationMapper {
 
     int deleteByExample(GoodsLocationExample example);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(@Param("id") String id);
 
     int insert(GoodsLocation record);
 
@@ -20,7 +20,7 @@ public interface GoodsLocationMapper {
 
     List<GoodsLocation> selectByExample(GoodsLocationExample example);
 
-    GoodsLocation selectByPrimaryKey(String id);
+    GoodsLocation selectByPrimaryKey(@Param("id") String id);
 
     int updateByExampleSelective(@Param("record") GoodsLocation record, @Param("example") GoodsLocationExample example);
 
