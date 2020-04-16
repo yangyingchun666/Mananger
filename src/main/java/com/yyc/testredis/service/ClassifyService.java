@@ -11,4 +11,6 @@ public interface ClassifyService {
     int selectPageCount(Page page);
 
     List<Classify> selectClassifyByLevel(Integer level);
+
+    String selectParentIdById(String getgClassfyId);
 }

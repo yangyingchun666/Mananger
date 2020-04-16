@@ -168,6 +168,17 @@
                         }
                     })
                 });
+            }else if (obj.event === 'edit') {
+                // layer.alert('编辑行：<br>' + JSON.stringify(data))
+                layer.open({
+                    type: 2,
+                    title: "商品编辑", //不显示标题栏
+                    closeBtn: 2,
+                    offset: ['5%', '25%'],//设置位移
+                    area: ['900px', '700px'],
+                    // btn: ['保存', '取消'],
+                    content: '/goods/editGoods?id=' + data.id, //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
             }
         });
        $("#openAddGoodsPage").click(function () {

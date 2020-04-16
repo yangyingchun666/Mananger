@@ -2,18 +2,24 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>商品添加</title>
+    <title>商品修改</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css"/>
 </head>
 <script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/layui/layui.js"></script>
 <script th:inline="javascript">
     var loginUrl = window.location.protocol + "//" + window.location.host + "/";
+    var projects=[[${gImgPath}]];
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
         var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
         //但是，如果你的HTML是动态生成的，自动渲染就会失效
         //因此你需要在相应的地方，执行下述方法来进行渲染
         form.render();
+    });
+
+    $(function editShowData() {
+        console.log(projects)
+        $("#editImg").attr('src', loginUrl + "showImage?imgUrl=" + projects);
     });
 
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
@@ -53,10 +59,10 @@
                 return false;
             }
         });
-        $("#adduploadGoodImg").blur(function () {
-            console.log($("#adduploadGoodImg").val())
-            var adduploadGoodImg = $("#adduploadGoodImg").val();
-            if (adduploadGoodImg == '') {
+        $("#edituploadGoodImg").blur(function () {
+            console.log($("#edituploadGoodImg").val())
+            var edituploadGoodImg = $("#edituploadGoodImg").val();
+            if (edituploadGoodImg == '') {
                 layer.msg("请上传头像", {
                     "icon": 2,
                     "time": 2000
@@ -66,9 +72,9 @@
             return true;
         });
 
-        $("#saveAddGoods").click(function () {
-            // // var data = form.val('AddGoodsForm')
-            // var fields = $('#AddGoodsForm').serializeArray();
+        $("#saveEditGoods").click(function () {
+            // // var data = form.val('editGoodsForm')
+            // var fields = $('#editGoodsForm').serializeArray();
             // var data = {}; //声明一个对象
             // $.each(fields, function(index, field) {
             //     data[field.name] = field.value; //通过变量，将属性值，属性一起放到对象中
@@ -76,7 +82,7 @@
             // console.log(data)
             // console.log(JSON.stringify(data))
 
-            if ($("#adduploadGoodImg").val() == '') {
+            if ($("#edituploadGoodImg").val() == '') {
                 layer.msg("请上传商品图片", {
                     "icon": 2,
                     "time": 2000
@@ -125,15 +131,15 @@
                 });
                 return;
             }
-            var gImgPath = $("#addUploadGoodImg").val();
+            var gImgPath = $("#editUploadGoodImg").val();
             var gName = $("#gName").val();
             var gStock = $("#gStock").val();
             var goodLocation = $("#goodLocation").val();
             var levelOne = $("#levelOne").val();
             var levelTwo = $("#levelTwo").val();
             var levelThree = $("#levelThree").val();
-           $.ajax({
-                url: '/goods/saveAddGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&levelOne='+levelOne+'&levelTwo='+levelTwo+'&levelThree='+levelThree,
+            $.ajax({
+                url: '/goods/saveEditGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&levelOne='+levelOne+'&levelTwo='+levelTwo+'&levelThree='+levelThree,
                 success: function (result) {
                     console.log(result.state);
                     if (result.state == 0) {
@@ -156,7 +162,7 @@
 
         //执行实例
         var uploadInst = upload.render({
-            elem: '#addGoodsImg' //绑定元素
+            elem: '#editGoodsImg' //绑定元素
             , url: '/uploadFile' //上传接口
             , accept: 'images' //只允许上传图片
             , acceptMime: 'image/png,image/jpeg,image/jpg' //只筛选图片
@@ -164,9 +170,9 @@
                 if (res.state == 0) {
                     layer.msg("上传成功");
                     console.log(res.data.filePath);
-                    $("#addUploadGoodImg").attr('value', res.data.filePath);
+                    $("#editUploadGoodImg").attr('value', res.data.filePath);
                     // $("#demo1").attr('src',res.data.filePath)
-                    $("#addImg").attr('src', loginUrl + "showImage?imgUrl=" + res.data.filePath);
+                    $("#editImg").attr('src', loginUrl + "showImage?imgUrl=" + res.data.filePath);
                 } else {
                     layer.msg("上传失败");
                 }
@@ -178,7 +184,7 @@
                 layer.msg("上传失败");
             }
         });
-        $("#cancelAdd").click(function () {
+        $("#cancelEdit").click(function () {
             var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
             parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
             parent.layer.close(index);		//关闭窗口
@@ -186,29 +192,31 @@
     });
 </script>
 <div>
-    <form id="AddGoodsForm" class="layui-form" lay-filter="AddGoodsForm" style="width: 500px; margin-left: 150px; margin-top: 10%" name="AddGoodsForm">
+    <form id="editGoodsForm" class="layui-form" lay-filter="editGoodsForm" style="width: 500px; margin-left: 150px; margin-top: 10%" name="editGoodsForm">
         <div class="layui-form-item">
             <label class="layui-form-label" style="text-align: center;margin-top: 34px;">商品图片:</label>
             <div class="layui-input-block">
-                <img class="layui-upload-img" id="addImg" style="width: 100px;height: 100px;">
-                <button type="button" class="layui-btn" id="addGoodsImg" style="margin-left: 20px; margin-top: 64px;">
+                <img class="layui-upload-img" id="editImg" style="width: 100px;height: 100px;">
+                <button type="button" class="layui-btn" id="editGoodsImg" style="margin-left: 20px; margin-top: 64px;">
                     <i class="layui-icon">&#xe67c;</i>选择图片
                 </button>
-                <input id="addUploadGoodImg" name="gImgPathAdd" type="hidden">
+                <input id="editUploadGoodImg" name="gImgPath" type="hidden" th:value="${gImgPath}">
             </div>
         </div>
         <div class="layui-form-item" style="margin-top: 20px;">
             <label class="layui-form-label">商品名称:</label>
             <div class="layui-input-block">
-                <input type="text" name="gNameAdd" placeholder="请输入商品名称" id="gName" lay-verify="required"
-                       class="layui-input" style="width: 100%;">
+                <input type="text" name="gName" placeholder="请输入商品名称" id="gName" lay-verify="required"
+                       class="layui-input" style="width: 100%;" th:value="${gName}">
+                <input type="text" name="id"  id="id" hidden="hidden"
+                       class="layui-input" style="width: 100%;" th:value="${id}">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">商品库存:</label>
             <div class="layui-input-block">
-                <input id="gStock" type="number" name="gStockAdd" lay-verify="required"
-                       placeholder="请输入商品库存(整数)" class="layui-input" style="width: 100%;">
+                <input id="gStock" type="number" name="gStock" lay-verify="required"
+                       placeholder="请输入商品库存(整数)" class="layui-input" style="width: 100%;" th:value="${gStock}">
 
             </div>
         </div>
@@ -216,7 +224,7 @@
             <label class="layui-form-label">选择商品存放货架</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
-                    <select id="goodLocation" lay-verify="required" lay-search="" name="gLocationIdAdd"
+                    <select id="goodLocation" lay-verify="required" lay-search="" name="gLocationId"
                             style="width: 100%;" class="layui-form-select">
                         <option value="" selected="">请选择商品存放货架</option>
                     </select>
@@ -259,16 +267,24 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <input id="saveAddGoods" type="button" value="保存" lay-filter="saveAddGoods" class="layui-btn"
+                <input id="saveEditGoods" type="button" value="保存" lay-filter="saveEditGoods" class="layui-btn"
                        style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em; margin-left: 30px;"/>
-                <input id="cancelAdd" type="button" value="取消" lay-filter="cancelAdd" class="layui-btn"
+                <input id="cancelEdit" type="button" value="取消" lay-filter="cancelEdit" class="layui-btn"
                        style="width: 30%;height: 42px;font-size: 10px;border-radius: 3px;margin-top: 10px;letter-spacing: 0.5em;margin-left: 100px;"/>
             </div>
         </div>
     </form>
 
 </div>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+    var gLocationId = [[${gLocationId}]]; <!--接收值-->
+    var level1 = [[${levelOne}]]; <!--接收值-->
+    var level2 = [[${levelTwo}]];
+    var level3 = [[${levelThree}]];
+    console.log("level1="+level1)
+    console.log("level2="+level2)
+    console.log("level3="+level3)
+
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
         var form = layui.form;
         var $ = layui.$;
@@ -292,7 +308,12 @@
                     var classifyLevel = datas.data;
                     if (datas.state == 0) {
                         for (i = 0; i < classifyLevel.length; i++) {
-                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            var its ='';
+                            if(classifyLevel[i].id == level1){
+                                its = '<option selected="selected" value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }else {
+                                its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }
                             selects += its;
                         }
                         $("#levelOne").append(selects);
@@ -312,7 +333,12 @@
                     var classifyLevel = datas.data;
                     if (datas.state == 0) {
                         for (i = 0; i < classifyLevel.length; i++) {
-                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            var its ='';
+                            if(classifyLevel[i].id == level2){
+                                its = '<option selected="selected" value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }else {
+                                its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }
                             selects += its;
                         }
                         $("#levelTwo").append(selects);
@@ -332,7 +358,12 @@
                     var classifyLevel = datas.data;
                     if (datas.state == 0) {
                         for (i = 0; i < classifyLevel.length; i++) {
-                            var its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            var its ='';
+                            if(classifyLevel[i].id == level3){
+                                its = '<option selected="selected" value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }else {
+                                its = '<option value="' + classifyLevel[i].id + '">' + classifyLevel[i].cName + '</option>';
+                            }
                             selects += its;
                         }
                         $("#levelThree").append(selects);
@@ -353,8 +384,13 @@
                     var goods = datas.data;
                     if (datas.state == 0) {
                         for (i = 0; i < goods.length; i++) {
-                            var its = '<option value="' + goods[i].id + '">' + goods[i].lName + '</option>';
-                            selects += its;
+                            if(goods[i].id == gLocationId){
+                                var its = '<option selected="selected" value="' + goods[i].id + '">' + goods[i].lName + '</option>';
+                                selects += its;
+                            }else {
+                                var its = '<option value="' + goods[i].id + '">' + goods[i].lName + '</option>';
+                                selects += its;
+                            }
                         }
                         $("#goodLocation").append(selects);
                         form.render();//菜单渲染 把内容加载进去

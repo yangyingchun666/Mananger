@@ -21,7 +21,7 @@ public interface GoodsMapper {
 
     List<Goods> selectByExample(GoodsExample example);
 
-    Goods selectByPrimaryKey(String id);
+    Goods selectByPrimaryKey(@Param("id") String id);
 
     int updateByExampleSelective(@Param("record") Goods record, @Param("example") GoodsExample example);
 

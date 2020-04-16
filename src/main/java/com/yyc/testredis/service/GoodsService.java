@@ -13,4 +13,8 @@ public interface GoodsService {
     Integer insert(Goods goods);
 
     Integer deleteById(String id);
+
+    Integer update(Goods goods);
+
+    Goods selectById(String id);
 }

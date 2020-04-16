@@ -31,4 +31,9 @@ public class ClassifyServiceImpl implements ClassifyService {
     public List<Classify> selectClassifyByLevel(Integer level) {
         return classifyMapper.selectClassifyByLevel(level);
     }
+
+    @Override
+    public String selectParentIdById(String id) {
+        return classifyMapper.selectParentIdById(id);
+    }
 }

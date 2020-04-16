@@ -262,4 +262,9 @@
       </if>
     </where>
   </select>
+    <select id="selectParentIdById" resultType="java.lang.String" parameterType="java.lang.String">
+        select c_parent_id
+        from classify
+        where id=#{id}
+    </select>
 </mapper>

@@ -35,4 +35,6 @@ public interface ClassifyMapper {
     int selectPageCount(Page page);
 
     List<Classify> selectClassifyByLevel(@Param("level") Integer level);
+
+    String selectParentIdById(@Param("id") String id);
 }

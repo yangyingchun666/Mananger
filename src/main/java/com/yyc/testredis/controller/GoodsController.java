@@ -1,6 +1,7 @@
 package com.yyc.testredis.controller;
 
 import com.yyc.testredis.pojo.Goods;
+import com.yyc.testredis.service.ClassifyService;
 import com.yyc.testredis.service.GoodsService;
 import com.yyc.testredis.utils.CreateIDUtils;
 import com.yyc.testredis.utils.JsonResult;
@@ -9,6 +10,7 @@ import com.yyc.testredis.utils.ResultMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -21,6 +23,8 @@ public class GoodsController {
 
     @Autowired
     GoodsService goodsService;
+    @Autowired
+    ClassifyService classifyService;
 
 
     /**
@@ -44,7 +48,7 @@ public class GoodsController {
      * 添加页面
      */
     @RequestMapping("/addGoods")
-    public String editDataPage() {
+    public String addGoods() {
         log.info("商品添加页面");
         return "addPage/goodsAdd";
     }
@@ -100,6 +104,64 @@ public class GoodsController {
     public JsonResult delete(@RequestParam("id") String id){
         log.info("删除商品，id{}",id);
         Integer rows=goodsService.deleteById(id);
+        if(rows<1 ){
+            return new JsonResult(1,"删除失败");
+        }else {
+            return new JsonResult(0,"删除成功");
+        }
+    }
+
+
+    /**
+     * 添加页面
+     */
+    @RequestMapping("/editGoods")
+    public String editGoodsPage(Model model, @RequestParam("id") String id) {
+        log.info("商品修改页面,参数{}:",id);
+        /**
+        *  根据id查询商品信息
+        **/
+        Goods goods = goodsService.selectById(id);
+        model.addAttribute("id",id);
+        model.addAttribute("gImgPath",goods.getgImgPath());
+        model.addAttribute("gName",goods.getgName());
+        model.addAttribute("gStock",goods.getgStock());
+        model.addAttribute("gLocationId",goods.getgLocationId());
+        model.addAttribute("levelThree",goods.getgClassfyId());
+        //查询上上级id
+        String levelTwo= classifyService.selectParentIdById(goods.getgClassfyId());
+        String levelOne= classifyService.selectParentIdById(levelTwo);
+        model.addAttribute("levelOne",levelOne);
+        model.addAttribute("levelTwo",levelTwo);
+        return "editPage/goodsEdit";
+    }
+
+
+    /**
+     * @Description: 商品保存修改
+     *
+     * @author Anakin Yang
+     * @date 2020/4/16 10:59
+     * @param id,gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree
+     * @return JsonResult
+     */
+    @RequestMapping("/saveEditGoods")
+    @ResponseBody
+    public JsonResult saveEditGoods(@RequestParam("id") String id,@RequestParam("gImgPath") String gImgPath,@RequestParam("gName")String gName,
+                                     @RequestParam("gStock")Integer gStock,@RequestParam("goodLocation")String goodLocation,
+                                     @RequestParam("levelOne")String levelOne,@RequestParam("levelTwo")String levelTwo,
+                                     @RequestParam("levelThree")String levelThree) {
+        log.info("修改商品,参数:id,gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree{}",id,gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree);
+
+        Goods goods = new Goods();
+        goods.setId(id);
+        goods.setgName(gName);
+        goods.setgImgPath(gImgPath);
+        goods.setgLocationId(goodLocation);
+        goods.setgStock(gStock);
+        goods.setgClassfyId(levelThree);
+        goods.setUpdateTime(new Date());
+        Integer rows = goodsService.update(goods);
         if(rows<1 ){
             return new JsonResult(1,"删除失败");
         }else {

@@ -37,4 +37,14 @@ public class GoodsServiceImpl implements GoodsService {
     public Integer deleteById(String id) {
         return goodsMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public Integer update(Goods goods) {
+        return goodsMapper.updateByPrimaryKeySelective(goods);
+    }
+
+    @Override
+    public Goods selectById(String id) {
+        return goodsMapper.selectByPrimaryKey(id);
+    }
 }
