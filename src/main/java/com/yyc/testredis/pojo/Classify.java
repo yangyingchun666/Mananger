@@ -1,6 +1,10 @@
 package com.yyc.testredis.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Classify {
     private String id;
@@ -14,6 +18,8 @@ public class Classify {
     private Date createTime;
 
     private Date updateTime;
+    @JsonIgnore
+    private List<Classify> children = new ArrayList<>();
 
     public String getId() {
         return id;

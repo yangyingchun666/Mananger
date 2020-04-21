@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>标准数据格式</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/static/zTree_v3/css/zTreeStyle/zTreeStyle.css"/>
+</head>
+<script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script type="text/javascript" src="/static/zTree_v3/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="/static/zTree_v3/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="/static/zTree_v3/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript" src="/static/zTree_v3/js/jquery.ztree.exedit.js"></script>
+<script type="text/javascript" src="/static/zTree_v3/js/jquery.ztree.exhide.js"></script>
+<script type="text/javascript">
+    layui.use(['element', 'layer', 'jquery'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var $ = layui.$;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            //是否允许编辑节点
+            // edit: {
+            //     enable: true,
+            //     editNameSelectAll: true,
+            //     showRemoveBtn: true,
+            //     removeTitle: "删除节点",
+            //     showRenameBtn: true,
+            //     renameTitle: "编辑节点"
+            // },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                // beforeRemove: beforeRemove,  //移除前
+                // beforeRename: beforeRename,   //重命名前
+                // //onRemove: onRemove,
+                // onRename: onRename,
+                // beforeDrag: beforeDrag,
+                onClick: zTreeOnClick //注册节点的点击事件
+            },
+            // view: {
+            //     selectedMulti: false,
+            //     // addHoverDom: addHoverDom, //移入节点显示编辑按钮
+            //     removeHoverDom: removeHoverDom  //移入节点显示编辑按钮
+            // },
+        };
+
+        //初始化第一个树
+        //获取部门tree数据
+        function loadTree() {
+            $.ajax({
+                type: 'POST',
+                contentType: '',
+                url: "/classify/getClassify",
+                data: {},
+                timeout: 1000, //超时时间设置，单位毫秒
+                dataType: 'json',
+                success: function (res) {
+                    zNodes = []; //初始化ztree
+                    for (var i = 0; i < res.length; i++) {
+                        var data = res[i]
+                        zNodes.push({
+                            'id': data.id,
+                            'pId': data.parentId,
+                            'name': data.name,
+                            'open': true
+                        });
+                    }
+                    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes); //初始化ztree
+                }
+            })
+
+        }
+
+        $(document).ready(function () {
+            loadTree();
+        });
+
+        //鼠标移入节点，显示编辑按钮
+        // function addHoverDom(treeId, treeNode) {  //treeNode是当前hover的节点信息
+        //     var sObj = $("#" + treeNode.tId + "_span");
+        //     if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+        //     var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+        //         + "' title='添加节点' οnfοcus='this.blur();'></span>";
+        //     sObj.after(addStr);
+        //     var btn = $("#addBtn_" + treeNode.tId);
+        //
+        //     //判断该部门下是否有人员，用于删除节点时，当节点下有信息，禁止删除。
+        //     var data1 = {
+        //         "id": treeNode.id
+        //     };
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: "",
+        //         data: data1,
+        //         timeout: 1000, //超时时间设置，单位毫秒
+        //         dataType: 'json',
+        //         success: function (res) {
+        //             //console.log(res);
+        //             if (res.flag == 0) {
+        //                 var datalist = res.data;
+        //                 if (datalist.length == 0) {
+        //                     hasMember = false;
+        //                 } else {
+        //                     hasMember = true;
+        //                 }
+        //             } else {
+        //                 hasMember = true;
+        //             }
+        //         }
+        //     });
+        //     //当点击添加按钮时：
+        //     if (btn) btn.bind("click", function () {
+        //         var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        //         console.log(treeNode.id);
+        //         var name = "新部门" + (newCount++);
+        //         var newNode;
+        //         //发送请求保存一个新建的节点，后台返回ID，用返回的ID新增节点
+        //         var data = {
+        //             "code": treeNode.id,
+        //             "name": name
+        //         };
+        //         $.ajax({
+        //             type: 'post',
+        //             url: "",
+        //             data: data,
+        //             timeout: 1000, //超时时间设置，单位毫秒
+        //             dataType: 'json',
+        //             success: function (res) {
+        //                 console.log(res)
+        //                 if (res.flag == 0) {
+        //                     var newId = res.data;
+        //                     //在树节点上增加节点
+        //                     newNode = zTree.addNodes(treeNode, {id: newId, pId: treeNode.id, name: name});
+        //                     zTree.editName(newNode[0]) //新增的节点进入编辑状态
+        //                 }
+        //             }
+        //         });
+        //         return false;
+        //     });
+        // }
+
+        //添加根节点
+        // $('.addnode').click(function () {
+        //     var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+        //         nodes = zTree.getNodes();
+        //     console.log(nodes)
+        //
+        //     var name = "新部门" + (newCount++);
+        //     var newNode;
+        //     //发送请求保存一个新建的节点，根据返回ID添加新节点
+        //     var data = {
+        //         "code": 0,
+        //         "name": name
+        //     };
+        //     $.ajax({
+        //         type: 'post',
+        //         url: "",
+        //         data: data,
+        //         timeout: 1000, //超时时间设置，单位毫秒
+        //         dataType: 'json',
+        //         success: function (res) {
+        //             console.log(res)
+        //             if (res.flag == 0) {
+        //                 var newId = res.data;
+        //                 newNode = zTree.addNodes(null, {id: newId, pId: null, name: name});
+        //                 zTree.editName(newNode[0]);  //新增后显示编辑状态
+        //             }
+        //         }
+        //     });
+        // });
+
+        //重命名之前的判断
+        // function beforeRename(treeId, treeNode, newName) {
+        //     if (newName.length == 0) {
+        //         layer.msg("节点名称不能为空.");
+        //         var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        //         setTimeout(function () {
+        //             zTree.editName(treeNode)
+        //         }, 10);
+        //         return false;
+        //     }
+        //     return true;
+        // }
+
+        //修改节点信息
+        // function onRename(event, treeId, treeNode, isCancel) {
+        //     if (isCancel) {
+        //         return;
+        //     }
+        //     var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        //     var onodes = zTree.getNodes()
+        //     console.log(onodes);
+        //     //发送请求修改节点信息
+        //     var data = {
+        //         "id": treeNode.id,
+        //         "code": treeNode.pId,  //父节点
+        //         "name": treeNode.name,
+        //     };
+        //     $.ajax({
+        //         type: 'post',
+        //         url: "",
+        //         data: data,
+        //         timeout: 1000, //超时时间设置，单位毫秒
+        //         dataType: 'json',
+        //         success: function (res) {
+        //             layer.msg(res.msg)
+        //         }
+        //     });
+        // }
+
+        //删除之前的判断
+        // function beforeRemove(treeId, treeNode) {
+        //     $.ajax({
+        //         type: 'get',
+        //         url: "/classify/getChildrenByParentId?id=" + treeNode.id,
+        //         success: function (res) {
+        //             console.log(res);
+        //             if (res.state == 0) {
+        //             debugger
+        //                 layer.alert('该分类下还有分类，不能删除');
+        //                 return false;
+        //             } else {
+        //                 var oFlag = confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+        //                 // if (oFlag) {
+        //                 //     $.ajax({
+        //                 //         type: 'post',
+        //                 //         url: "",
+        //                 //         data: data,
+        //                 //         timeout: 1000, //超时时间设置，单位毫秒
+        //                 //         dataType: 'json',
+        //                 //         success: function (res) {
+        //                 //             console.log(res)
+        //                 //             if (res.flag == 0) {
+        //                 //                 layer.msg(res.msg)
+        //                 //                 return true;
+        //                 //             } else {
+        //                 //                 layer.msg(res.msg);
+        //                 //                 return false;
+        //                 //             }
+        //                 //         }
+        //                 //     })
+        //                 // } else {
+        //                 //     return false
+        //                 // }
+        //             }
+        //         }
+        //     })
+        //     // if (isParent) {
+        //     //     layer.alert('该分类下还有分类，不能删除');
+        //     //     return false;
+        //     // }else {
+        //     //     var oFlag = confirm("确认删除 节点 -- " + treeNode.name + " 吗？");
+        //     //     if (oFlag) {
+        //     //         $.ajax({
+        //     //             type: 'post',
+        //     //             url: "",
+        //     //             data: data,
+        //     //             timeout: 1000, //超时时间设置，单位毫秒
+        //     //             dataType: 'json',
+        //     //             success: function (res) {
+        //     //                 console.log(res)
+        //     //                 if (res.flag == 0) {
+        //     //                     layer.msg(res.msg)
+        //     //                     return true;
+        //     //                 } else {
+        //     //                     layer.msg(res.msg);
+        //     //                     return false;
+        //     //                 }
+        //     //             }
+        //     //         })
+        //     //     } else {
+        //     //         return false
+        //     //     }
+        //     // }
+        //
+        //
+        // }
+
+        // function removeHoverDom(treeId, treeNode) {
+        //     // $("#addBtn_" + treeNode.tId).unbind().remove();
+        // };
+
+        // function beforeDrag() {
+        //     return false;  //禁止所有拖拽功能
+        // }
+
+        //当点击节点
+        function zTreeOnClick(event, treeId, treeNode) {
+            alert(treeNode.id + ", " + treeNode.name);
+            //这里根据节点ID获取对应信息或进行对应的操作
+        }
+    })
+
+</script>
+</head>
+<body>
+<div id="treeDemo" class="ztree">
+</div>
+</body>
+</html>

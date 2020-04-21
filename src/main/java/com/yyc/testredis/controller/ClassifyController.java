@@ -5,6 +5,7 @@ import com.yyc.testredis.service.ClassifyService;
 import com.yyc.testredis.utils.JsonResult;
 import com.yyc.testredis.utils.Page;
 import com.yyc.testredis.utils.ResultMap;
+import com.yyc.testredis.vo.ClassifyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,16 +46,66 @@ public class ClassifyController {
     }
 
     /**
-     *  添加商品页面查询分类
+     * 添加商品页面查询分类
+     *
      * @param level
      * @return
      */
     @RequestMapping("/selectClassifyLevel")
     @ResponseBody
-    public JsonResult selectClassifyLevel(@RequestParam("level") Integer level){
-        log.info("根据分类级别查询分类列表,参数level=[]",level);
-        List<Classify> classifyList=classifyService.selectClassifyByLevel(level);
-        return new JsonResult(0,"成功",classifyList);
+    public JsonResult selectClassifyLevel(@RequestParam("level") Integer level) {
+        log.info("根据分类级别查询分类列表,参数level=[]", level);
+        List<Classify> classifyList = classifyService.selectClassifyByLevel(level);
+        return new JsonResult(0, "成功", classifyList);
 
+    }
+
+    /**
+     * @param
+     * @return
+     * @Description: 分类添加页面
+     * @author Anakin Yang
+     * @date 2020/4/16 16:35
+     */
+    @RequestMapping("/addClassify")
+    public String addClassify() {
+        log.info("————————————分类添加页面————————————");
+        return "/addPage/classifyAdd";
+    }
+
+    @RequestMapping("/saveAddClassify")
+    @ResponseBody
+    public JsonResult saveAddClassify(@RequestParam("levelOneName") String levelOneName, @RequestParam("levelTwoName") String levelTwoName, @RequestParam("levelThreeName") String levelThreeName) {
+        log.info("————————————分类添加页面————————————");
+        log.info("参数levelOneName:{}", levelOneName);
+        log.info("参数levelTwoName:{}", levelTwoName);
+        log.info("参数levelThreeName:{}", levelThreeName);
+        return new JsonResult(0, "成功");
+    }
+
+    /**
+     * @param
+     * @return
+     * @Description: zTree树
+     * @author Anakin Yang
+     * @date 2020/4/17 10:32
+     */
+    @RequestMapping("/getClassify")
+    @ResponseBody
+    public List<ClassifyVO> getMenuTestList() {
+        log.info("————————————分类ZTree————————————");
+        List<ClassifyVO> classifyList = classifyService.getClassify();
+        return classifyList;
+    }
+
+    @RequestMapping("/getChildrenByParentId")
+    @ResponseBody
+    public JsonResult getChildrenByParentId(@RequestParam("id") String id){
+        List<ClassifyVO> classifyChildren = classifyService.getClassifyChildren(id);
+        if(classifyChildren ==null || classifyChildren.size()==0){
+            return new JsonResult(1,"无子节点",classifyChildren);
+        }else {
+            return new JsonResult(0,"有子节点",classifyChildren);
+        }
     }
 }

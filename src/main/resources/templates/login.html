@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -72,6 +72,37 @@
                         layer.msg("请求失败")
                     }
                 })
+            });
+            //回车键登录键盘事件监听
+            $(document).keydown(function(event){
+                if(event.keyCode==13){
+                    console.log(event.keyCode);
+                    var data = form.val('loginFrom')
+                    console.log(JSON.stringify(data))
+                    console.log(data)
+                    $.ajax({
+                        url: '/loginInto',
+                        type: 'post',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function (result) {
+                            console.log(result.state);
+                            if (result.state == 0) {
+                                layer.msg("登录成功，即将跳转。。。");
+                                location.href = "/index/indexPage"
+                            } else if(result.message=='用户未注册'){
+                                layer.msg("用户未注册")
+                            } else if(result.message=='密码错误'){
+                                layer.msg("密码错误")
+                            }
+                        },
+                        error: function () {
+                            layer.msg("请求失败")
+                        }
+                    })
+                }
+
+
             });
         })
     })

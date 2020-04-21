@@ -267,4 +267,12 @@
         from classify
         where id=#{id}
     </select>
+    <select id="getClassify" resultType="com.yyc.testredis.vo.ClassifyVO">
+       select id as id, c_parent_id as parentId, c_name as name from classify
+    </select>
+  <select id="getClassifyChildren" resultType="com.yyc.testredis.vo.ClassifyVO" parameterType="java.lang.String">
+    select id as id ,c_parent_id as parentId,c_name as name
+    from classify
+    where c_parent_id =#{parentId}
+  </select>
 </mapper>

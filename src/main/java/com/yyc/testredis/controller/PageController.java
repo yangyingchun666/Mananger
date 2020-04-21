@@ -119,4 +119,9 @@ public class PageController {
         return "listPage/goodsList";
     }
 
+    @RequestMapping("/zTreePage")
+    public String zTreePage() {
+        return "zTreeDemo";
+    }
+
 }
