@@ -47,4 +47,29 @@ public class ClassifyServiceImpl implements ClassifyService {
     public List<ClassifyVO> getClassifyChildren(String parentId) {
         return classifyMapper.getClassifyChildren(parentId);
     }
+
+    @Override
+    public List<Classify> getClassifyAll() {
+        return classifyMapper.getClassifyAll();
+    }
+
+    @Override
+    public Integer selectParentLevel(String cParentId) {
+        return classifyMapper.selectParentLevel(cParentId);
+    }
+
+    @Override
+    public int insert(Classify classify) {
+        return classifyMapper.insertSelective(classify);
+    }
+
+    @Override
+    public Classify selectClasssifyById(String id) {
+        return classifyMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int update(Classify classify) {
+        return classifyMapper.updateByPrimaryKeySelective(classify);
+    }
 }

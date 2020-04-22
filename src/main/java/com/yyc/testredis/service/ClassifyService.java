@@ -18,4 +18,14 @@ public interface ClassifyService {
     List<ClassifyVO> getClassify();
 
     List<ClassifyVO> getClassifyChildren(String parentId);
+
+    List<Classify> getClassifyAll();
+
+    Integer selectParentLevel(String cParentId);
+
+    int insert(Classify classify);
+
+    Classify selectClasssifyById(String id);
+
+    int update(Classify classify);
 }

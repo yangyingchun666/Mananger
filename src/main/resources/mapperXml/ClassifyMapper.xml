@@ -232,7 +232,7 @@
     <include refid="Base_Column_List"/>
     from classify
     <where>
-      1=1
+      1=1 and id!='000'
       <if test="keyWord!='' and keyType=='cName' ">
         AND c_name like '%' #{keyWord} '%'
       </if>
@@ -251,7 +251,7 @@
   <select id="selectPageCount" parameterType="com.yyc.testredis.utils.Page" resultType="java.lang.Integer">
     select count(1) from classify
     <where>
-      1=1
+      1=1 and id!='000'
       <if test="keyWord!='' and keyType=='cName' ">
         AND c_name like '%' #{keyWord} '%'
       </if>
@@ -280,5 +280,16 @@
     select id as id ,c_parent_id as parentId,c_name as name
     from classify
     where c_parent_id =#{parentId}
+  </select>
+    <select id="getClassifyAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from classify
+    where id !='000'
+    </select>
+  <select id="selectParentLevel" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select c_level_flag
+    from classify
+    where id=#{cParentId}
   </select>
 </mapper>

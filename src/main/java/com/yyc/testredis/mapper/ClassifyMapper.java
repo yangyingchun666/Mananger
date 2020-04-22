@@ -22,7 +22,7 @@ public interface ClassifyMapper {
 
     List<Classify> selectByExample(ClassifyExample example);
 
-    Classify selectByPrimaryKey(String id);
+    Classify selectByPrimaryKey(@Param("id") String id);
 
     int updateByExampleSelective(@Param("record") Classify record, @Param("example") ClassifyExample example);
 
@@ -43,4 +43,8 @@ public interface ClassifyMapper {
     List<ClassifyVO> getClassify();
 
     List<ClassifyVO> getClassifyChildren(@Param("parentId") String parentId);
+
+    List<Classify> getClassifyAll();
+
+    Integer selectParentLevel(@Param("cParentId") String cParentId);
 }
