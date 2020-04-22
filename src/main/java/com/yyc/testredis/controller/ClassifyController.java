@@ -62,7 +62,7 @@ public class ClassifyController {
 
     /**
      * @param
-     * @return
+     * @return string
      * @Description: 分类添加页面
      * @author Anakin Yang
      * @date 2020/4/16 16:35
@@ -73,6 +73,14 @@ public class ClassifyController {
         return "/addPage/classifyAdd";
     }
 
+    /**
+     * @Description: 保存添加分类
+     *
+     * @author Anakin Yang
+     * @date 2020/4/21 16:46
+     * @param levelOneName,levelTwoName,levelThreeName
+     * @return JsonResult
+     */
     @RequestMapping("/saveAddClassify")
     @ResponseBody
     public JsonResult saveAddClassify(@RequestParam("levelOneName") String levelOneName, @RequestParam("levelTwoName") String levelTwoName, @RequestParam("levelThreeName") String levelThreeName) {
@@ -84,8 +92,8 @@ public class ClassifyController {
     }
 
     /**
-     * @param
-     * @return
+     * @param 
+     * @return list
      * @Description: zTree树
      * @author Anakin Yang
      * @date 2020/4/17 10:32
@@ -98,6 +106,14 @@ public class ClassifyController {
         return classifyList;
     }
 
+    /**
+     * @Description: 查询子节点
+     * 
+     * @author Anakin Yang
+     * @date 2020/4/21 16:47
+     * @param id
+     * @return JsonResult
+     */
     @RequestMapping("/getChildrenByParentId")
     @ResponseBody
     public JsonResult getChildrenByParentId(@RequestParam("id") String id){

@@ -236,6 +236,12 @@
       <if test="keyWord!='' and keyType=='cName' ">
         AND c_name like '%' #{keyWord} '%'
       </if>
+      <if test="keyWord!='' and keyType=='id' ">
+        AND id =#{keyWord}
+      </if>
+      <if test="keyWord!='' and keyType=='id' ">
+        or c_parent_id =#{keyWord}
+      </if>
     </where>
     order by id asc
     limit #{start},#{rows}
