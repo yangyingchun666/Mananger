@@ -57,7 +57,7 @@
             console.log($("#adduploadGoodImg").val())
             var adduploadGoodImg = $("#adduploadGoodImg").val();
             if (adduploadGoodImg == '') {
-                layer.msg("请上传头像", {
+                layer.msg("请上传商品图片", {
                     "icon": 2,
                     "time": 2000
                 });
@@ -104,22 +104,8 @@
                 });
                 return;
             }
-            if ($("#levelOne").val() == '') {
-                layer.msg("请选择一级分类", {
-                    "icon": 2,
-                    "time": 2000
-                });
-                return;
-            }
-            if ($("#levelTwo").val() == '') {
-                layer.msg("请选择二级分类", {
-                    "icon": 2,
-                    "time": 2000
-                });
-                return;
-            }
-            if ($("#levelThree").val() == '') {
-                layer.msg("请选择三级分类", {
+            if ($("#classifyAll").val() == '') {
+                layer.msg("请选择分类", {
                     "icon": 2,
                     "time": 2000
                 });
@@ -129,11 +115,9 @@
             var gName = $("#gName").val();
             var gStock = $("#gStock").val();
             var goodLocation = $("#goodLocation").val();
-            var levelOne = $("#levelOne").val();
-            var levelTwo = $("#levelTwo").val();
-            var levelThree = $("#levelThree").val();
+            var classifyAll = $("#classifyAll").val();
            $.ajax({
-                url: '/goods/saveAddGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&levelOne='+levelOne+'&levelTwo='+levelTwo+'&levelThree='+levelThree,
+                url: '/goods/saveAddGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&classifyAll='+classifyAll,
                 success: function (result) {
                     console.log(result.state);
                     if (result.state == 0) {
@@ -223,8 +207,21 @@
                 </div>
             </div>
         </div>
+
+
         <span style="margin-left: 110px;font-family: cursive;font-size: larger;font-weight: bolder;"> 选择商品分类:</span>
         <div class="layui-form-item">
+            <label class="layui-form-label">商品分类</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="classifyAll" lay-verify="required" lay-search="" name="classifyAll"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="000" selected="">请选择商品分类(最高级分类则不选择)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
             <label class="layui-form-label">一级分类</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
@@ -256,7 +253,7 @@
                     </select>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <input id="saveAddGoods" type="button" value="保存" lay-filter="saveAddGoods" class="layui-btn"
@@ -277,11 +274,12 @@
         var levelThree=3;
         $(function () {
             gLocation();
-            getClassifyLevelOne(levelOne);
-            getClassifyLevelTwo(levelTwo);
-            getClassifyLevelThree(levelThree);
+            // getClassifyLevelOne(levelOne);
+            // getClassifyLevelTwo(levelTwo);
+            // getClassifyLevelThree(levelThree);
+            getClassifyAll();
         })
-        function getClassifyLevelOne(levelOne) {
+       /* function getClassifyLevelOne(levelOne) {
             console.log("one="+levelOne)
             $.ajax({
                 url: "/classify/selectClassifyLevel?level="+levelOne,
@@ -340,7 +338,7 @@
                     }
                 }
             });
-        }
+        }*/
 
         //获取商店
         function gLocation() {
@@ -357,6 +355,25 @@
                             selects += its;
                         }
                         $("#goodLocation").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
+        function getClassifyAll() {
+            $.ajax({
+                url: "/classify/getClassifyAll",
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var classify = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < classify.length; i++) {
+                            var its = '<option value="' + classify[i].id + '">' + classify[i].cName + '</option>';
+                            selects += its;
+                        }
+                        $("#classifyAll").append(selects);
                         form.render();//菜单渲染 把内容加载进去
                     }
                 }

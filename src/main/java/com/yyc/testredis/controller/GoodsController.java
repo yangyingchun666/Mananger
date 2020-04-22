@@ -65,9 +65,12 @@ public class GoodsController {
     @ResponseBody
     public JsonResult saveAddGoods(@RequestParam("gImgPath") String gImgPath,@RequestParam("gName")String gName,
                                    @RequestParam("gStock")Integer gStock,@RequestParam("goodLocation")String goodLocation,
-                                   @RequestParam("levelOne")String levelOne,@RequestParam("levelTwo")String levelTwo,
-                                   @RequestParam("levelThree")String levelThree) {
-        log.info("添加商品,参数:gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree{}",gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree);
+                                   @RequestParam("classifyAll")String classifyAll) {
+        log.info("添加商品,参数:gImgPath:{}",gImgPath);
+        log.info("添加商品,参数:gName:{}",gName);
+        log.info("添加商品,参数:gStock:{}",gStock);
+        log.info("添加商品,参数:goodLocation:{}",goodLocation);
+        log.info("添加商品,参数:classifyAll:{}",classifyAll);
         /**
          *  封装参数
          **/
@@ -79,7 +82,7 @@ public class GoodsController {
         goods.setgLocationId(goodLocation);
         goods.setgSalesVolume(0);
         goods.setgStock(gStock);
-        goods.setgClassfyId(levelThree);
+        goods.setgClassfyId(classifyAll);
         goods.setCreateTime(new Date());
         goods.setUpdateTime(new Date());
         Integer rows = 0;
@@ -132,12 +135,8 @@ public class GoodsController {
         model.addAttribute("gName",goods.getgName());
         model.addAttribute("gStock",goods.getgStock());
         model.addAttribute("gLocationId",goods.getgLocationId());
-        model.addAttribute("levelThree",goods.getgClassfyId());
+        model.addAttribute("classifyId",goods.getgClassfyId());
         //查询上上级id
-        String levelTwo= classifyService.selectParentIdById(goods.getgClassfyId());
-        String levelOne= classifyService.selectParentIdById(levelTwo);
-        model.addAttribute("levelOne",levelOne);
-        model.addAttribute("levelTwo",levelTwo);
         return "editPage/goodsEdit";
     }
 
@@ -154,21 +153,30 @@ public class GoodsController {
     @ResponseBody
     public JsonResult saveEditGoods(@RequestParam("id") String id,@RequestParam("gImgPath") String gImgPath,@RequestParam("gName")String gName,
                                      @RequestParam("gStock")Integer gStock,@RequestParam("goodLocation")String goodLocation,
-                                     @RequestParam("levelOne")String levelOne,@RequestParam("levelTwo")String levelTwo,
-                                     @RequestParam("levelThree")String levelThree) {
-        log.info("修改商品,参数:id,gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree{}",id,gImgPath,gName,gStock,goodLocation,levelOne,levelTwo,levelThree);
-
+                                     @RequestParam("classifyAll")String classifyAll) {
+        log.info("修改商品,参数:id:{}",id);
+        log.info("添加商品,参数:gImgPath:{}",gImgPath);
+        log.info("添加商品,参数:gName:{}",gName);
+        log.info("添加商品,参数:gStock:{}",gStock);
+        log.info("添加商品,参数:goodLocation:{}",goodLocation);
+        log.info("添加商品,参数:classifyAll:{}",classifyAll);
         Goods goods = new Goods();
         goods.setId(id);
         goods.setgName(gName);
         goods.setgImgPath(gImgPath);
         goods.setgLocationId(goodLocation);
         goods.setgStock(gStock);
-        goods.setgClassfyId(levelThree);
+        goods.setgClassfyId(classifyAll);
         goods.setUpdateTime(new Date());
-        Integer rows = goodsService.update(goods);
+        Integer rows =0;
+        try {
+            rows =goodsService.update(goods);
+        }catch (Exception e){
+            log.info("商品修改异常");
+            return new JsonResult(1,"修改失败");
+        }
         if(rows<1 ){
-            return new JsonResult(1,"删除失败");
+            return new JsonResult(1,"修改失败");
         }else {
             return new JsonResult(0,"删除成功");
         }

@@ -110,7 +110,7 @@
                 });
                 return;
             }
-            if ($("#levelOne").val() == '') {
+            /*if ($("#levelOne").val() == '') {
                 layer.msg("请选择一级分类", {
                     "icon": 2,
                     "time": 2000
@@ -123,9 +123,9 @@
                     "time": 2000
                 });
                 return;
-            }
-            if ($("#levelThree").val() == '') {
-                layer.msg("请选择三级分类", {
+            }*/
+            if ($("#classifyAll").val() == '') {
+                layer.msg("请选择商品分类", {
                     "icon": 2,
                     "time": 2000
                 });
@@ -135,24 +135,25 @@
             var gName = $("#gName").val();
             var gStock = $("#gStock").val();
             var goodLocation = $("#goodLocation").val();
-            var levelOne = $("#levelOne").val();
-            var levelTwo = $("#levelTwo").val();
-            var levelThree = $("#levelThree").val();
+            /*var levelOne = $("#levelOne").val();
+            var levelTwo = $("#levelTwo").val();*/
+            var classifyAll = $("#classifyAll").val();
+            var id = $("#id").val();
             $.ajax({
-                url: '/goods/saveEditGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&levelOne='+levelOne+'&levelTwo='+levelTwo+'&levelThree='+levelThree,
+                url: '/goods/saveEditGoods?gImgPath='+gImgPath+'&gName='+gName+'&gStock='+gStock+'&goodLocation='+goodLocation+'&classifyAll='+classifyAll+'&id='+id,
                 success: function (result) {
                     console.log(result.state);
                     if (result.state == 0) {
-                        layer.msg("添加成功");
+                        layer.msg(result.message);
                         var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
                         parent.location.reload();//刷新父页面，注意一定要在关闭当前iframe层之前执行刷新
                         parent.layer.close(index);		//关闭窗口
                     } else {
-                        layer.msg("添加失败")
+                        layer.msg(result.message)
                     }
                 },
-                error: function () {
-                    layer.msg("添加失败")
+                error: function (result) {
+                    layer.msg(result.message)
                 }
             })
         })
@@ -208,8 +209,8 @@
             <div class="layui-input-block">
                 <input type="text" name="gName" placeholder="请输入商品名称" id="gName" lay-verify="required"
                        class="layui-input" style="width: 100%;" th:value="${gName}">
-                <input type="text" name="id"  id="id" hidden="hidden"
-                       class="layui-input" style="width: 100%;" th:value="${id}">
+                <input type="text" name="id"  id="id"
+                       class="layui-input" style="width: 100%;display: none" th:value="${id}">
             </div>
         </div>
         <div class="layui-form-item">
@@ -233,6 +234,17 @@
         </div>
         <span style="margin-left: 110px;font-family: cursive;font-size: larger;font-weight: bolder;"> 选择商品分类:</span>
         <div class="layui-form-item">
+            <label class="layui-form-label">商品分类</label>
+            <div class="layui-input-block">
+                <div class="layui-input-inline">
+                    <select id="classifyAll" lay-verify="required" lay-search="" name="classifyAll"
+                            style="width: 100%;" class="layui-form-select">
+                        <option value="000" selected="">请选择商品分类(最高级分类则不选择)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--<div class="layui-form-item">
             <label class="layui-form-label">一级分类</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
@@ -264,7 +276,7 @@
                     </select>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <input id="saveEditGoods" type="button" value="保存" lay-filter="saveEditGoods" class="layui-btn"
@@ -278,26 +290,28 @@
 </div>
 <script type="text/javascript" th:inline="javascript">
     var gLocationId = [[${gLocationId}]]; <!--接收值-->
-    var level1 = [[${levelOne}]]; <!--接收值-->
+    var classifyId = [[${classifyId}]]; <!--接收值-->
+/*    var level1 = [[${levelOne}]]; <!--接收值-->
     var level2 = [[${levelTwo}]];
     var level3 = [[${levelThree}]];
     console.log("level1="+level1)
     console.log("level2="+level2)
-    console.log("level3="+level3)
+    console.log("level3="+level3)*/
 
     layui.use(['element', 'layer', 'jquery', 'form'], function () {
         var form = layui.form;
         var $ = layui.$;
-        var levelOne=1;
+        /*var levelOne=1;
         var levelTwo=2;
-        var levelThree=3;
+        var levelThree=3;*/
         $(function () {
             gLocation();
-            getClassifyLevelOne(levelOne);
-            getClassifyLevelTwo(levelTwo);
-            getClassifyLevelThree(levelThree);
+            // getClassifyLevelOne(levelOne);
+            // getClassifyLevelTwo(levelTwo);
+            // getClassifyLevelThree(levelThree);
+            getClassifyAll()
         })
-        function getClassifyLevelOne(levelOne) {
+        /*function getClassifyLevelOne(levelOne) {
             console.log("one="+levelOne)
             $.ajax({
                 url: "/classify/selectClassifyLevel?level="+levelOne,
@@ -371,7 +385,7 @@
                     }
                 }
             });
-        }
+        }*/
 
         //获取商店
         function gLocation() {
@@ -393,6 +407,31 @@
                             }
                         }
                         $("#goodLocation").append(selects);
+                        form.render();//菜单渲染 把内容加载进去
+                    }
+                }
+            });
+        }
+        function getClassifyAll() {
+            $.ajax({
+                url: "/classify/getClassifyAll",
+                type: "GET",
+                dataType: "json",
+                success: function (datas) {
+                    var selects = '';
+                    var its = '';
+                    var classify = datas.data;
+                    if (datas.state == 0) {
+                        for (i = 0; i < classify.length; i++) {
+                            if (classify[i].id == classifyId) {
+                                its = '<option selected="selected" value="' + classify[i].id + '">' + classify[i].cName + '</option>';
+                                selects += its;
+                            } else {
+                                its = '<option value="' + classify[i].id + '">' + classify[i].cName + '</option>';
+                                selects += its;
+                            }
+                        }
+                        $("#classifyAll").append(selects);
                         form.render();//菜单渲染 把内容加载进去
                     }
                 }
