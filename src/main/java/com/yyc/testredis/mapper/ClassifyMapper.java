@@ -14,7 +14,7 @@ public interface ClassifyMapper {
 
     int deleteByExample(ClassifyExample example);
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(@Param("id") String id);
 
     int insert(Classify record);
 

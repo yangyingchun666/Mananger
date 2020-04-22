@@ -72,4 +72,9 @@ public class ClassifyServiceImpl implements ClassifyService {
     public int update(Classify classify) {
         return classifyMapper.updateByPrimaryKeySelective(classify);
     }
+
+    @Override
+    public int deleteById(String id) {
+        return classifyMapper.deleteByPrimaryKey(id);
+    }
 }

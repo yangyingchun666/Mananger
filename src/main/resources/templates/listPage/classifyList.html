@@ -2,7 +2,7 @@
     <meta charset="utf-8">
     <title>分类列表</title>
     <link rel="stylesheet" href="/static/layui/css/layui.css"/>
-    <link rel="stylesheet" href="/static/zTree_v3/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="stylesheet" href="/static/zTree_v3/css/metroStyle/metroStyle.css"/>
     <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <script type="text/javascript" src="/static/layui/js/jquery.min.js"></script>
@@ -150,8 +150,23 @@
                 layer.msg('ID：' + data.id + ' 的查看操作');
             } else if (obj.event === 'del') {
                 layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    $.ajax({
+                        url:'/classify/delete?id='+data.id,
+                        success:function (result){
+                            if(result.state==0){
+                                obj.del();
+                                layer.close(index);
+                                window.location.reload();
+                                layer.msg(result.message, {icon: 4, anim: 4})
+                            }else {
+                                layer.msg(result.message, {icon: 4, anim: 4})
+                                layer.close(index);
+                            }
+                        },
+                        error: function () {
+                            layer.msg("删除失败", {icon: 4, anim: 4})
+                        }
+                    })
                 });
             } else if (obj.event === 'edit') {
                 // layer.alert('编辑行：<br>' + JSON.stringify(data))

@@ -28,4 +28,6 @@ public interface ClassifyService {
     Classify selectClasssifyById(String id);
 
     int update(Classify classify);
+
+    int deleteById(String id);
 }

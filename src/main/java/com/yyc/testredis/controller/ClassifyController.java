@@ -77,12 +77,11 @@ public class ClassifyController {
     }
 
     /**
-     * @Description: 保存添加分类
-     *
-     * @author Anakin Yang
-     * @date 2020/4/21 16:46
      * @param cName,cParentId
      * @return JsonResult
+     * @Description: 保存添加分类
+     * @author Anakin Yang
+     * @date 2020/4/21 16:46
      */
     @RequestMapping("/saveAddClassify")
     @ResponseBody
@@ -91,34 +90,34 @@ public class ClassifyController {
         log.info("参数cName:{}", cName);
         log.info("参数cParentId:{}", cParentId);
         /**
-        * 封装参数
-        **/
+         * 封装参数
+         **/
         Classify classify = new Classify();
         classify.setId(CreateIDUtils.genStringId());
         classify.setcName(cName);
         classify.setcParentId(cParentId);
-        Integer parentLevel =classifyService.selectParentLevel(cParentId);
-        if(parentLevel==null){
-            parentLevel=0;
+        Integer parentLevel = classifyService.selectParentLevel(cParentId);
+        if (parentLevel == null) {
+            parentLevel = 0;
         }
-        classify.setcLevelFlag(parentLevel+1);
+        classify.setcLevelFlag(parentLevel + 1);
         classify.setCreateTime(new Date());
         classify.setUpdateTime(new Date());
-        int rows=0;
+        int rows = 0;
         try {
-            rows=classifyService.insert(classify);
-        }catch (Exception e){
+            rows = classifyService.insert(classify);
+        } catch (Exception e) {
             log.info("分类添加异常");
-            return new JsonResult(1,"分类添加失败");
+            return new JsonResult(1, "分类添加失败");
         }
-        if(rows<1){
-            return new JsonResult(1,"分类添加失败");
+        if (rows < 1) {
+            return new JsonResult(1, "分类添加失败");
         }
         return new JsonResult(0, "分类添加成功");
     }
 
     /**
-     * @param 
+     * @param
      * @return list
      * @Description: zTree树
      * @author Anakin Yang
@@ -133,72 +132,68 @@ public class ClassifyController {
     }
 
     /**
-     * @Description: 查询子节点
-     * 
-     * @author Anakin Yang
-     * @date 2020/4/21 16:47
      * @param id
      * @return JsonResult
+     * @Description: 查询子节点
+     * @author Anakin Yang
+     * @date 2020/4/21 16:47
      */
     @RequestMapping("/getChildrenByParentId")
     @ResponseBody
-    public JsonResult getChildrenByParentId(@RequestParam("id") String id){
+    public JsonResult getChildrenByParentId(@RequestParam("id") String id) {
         log.info("————————————查询子节点————————————");
         List<ClassifyVO> classifyChildren = classifyService.getClassifyChildren(id);
-        if(classifyChildren ==null || classifyChildren.size()==0){
-            return new JsonResult(1,"无子节点",classifyChildren);
-        }else {
-            return new JsonResult(0,"有子节点",classifyChildren);
+        if (classifyChildren == null || classifyChildren.size() == 0) {
+            return new JsonResult(1, "无子节点", classifyChildren);
+        } else {
+            return new JsonResult(0, "有子节点", classifyChildren);
         }
     }
 
     /**
-     * @Description: 查询所有分类节点
-     *
-     * @author Anakin Yang
-     * @date 2020/4/22 14:17
      * @param
      * @return
+     * @Description: 查询所有分类节点
+     * @author Anakin Yang
+     * @date 2020/4/22 14:17
      */
     @RequestMapping("/getClassifyAll")
     @ResponseBody
-    public JsonResult getClassifyAll(){
+    public JsonResult getClassifyAll() {
         log.info("————————————查询子节点————————————");
-        List<Classify> classifyList=classifyService.getClassifyAll();
+        List<Classify> classifyList = classifyService.getClassifyAll();
         return new JsonResult(0, "成功", classifyList);
     }
 
     /**
+     * @param id
+     * @return String
      * @Description: 分类编辑页面
-     * 
      * @author Anakin Yang
      * @date 2020/4/22 15:26
-     * @param  id
-     * @return String
      */
     @RequestMapping("/editClassifyPage")
-    public String editClassifyPage(@RequestParam("id")String id, Model model){
+    public String editClassifyPage(@RequestParam("id") String id, Model model) {
         log.info("————————————分类编辑页面————————————");
-        log.info("参数id:{}",id);
+        log.info("参数id:{}", id);
         Classify classify = classifyService.selectClasssifyById(id);
-        model.addAttribute("id",classify.getId());
-        model.addAttribute("cName",classify.getcName());
-        model.addAttribute("classifyParentId",classify.getcParentId());
+        model.addAttribute("id", classify.getId());
+        model.addAttribute("cName", classify.getcName());
+        model.addAttribute("classifyParentId", classify.getcParentId());
         return "/editPage/classifyEdit";
     }
 
 
     /**
-     * @Description: 分类编辑页面保存
-     *
-     * @author Anakin Yang
-     * @date 2020/4/22 15:26
      * @param cName,cParentId,id
      * @return JsonResult
+     * @Description: 分类编辑页面保存
+     * @author Anakin Yang
+     * @date 2020/4/22 15:26
      */
     @RequestMapping("/saveEditClassify")
     @ResponseBody
-    public JsonResult saveEditClassify(@RequestParam("cName") String cName, @RequestParam("cParentId") String cParentId,@RequestParam("id") String id) {
+    public JsonResult saveEditClassify(@RequestParam("cName") String cName, @RequestParam("cParentId") String cParentId, @RequestParam("id") String id) {
         log.info("————————————分类编辑保存————————————");
         log.info("参数cName:{}", cName);
         log.info("参数cParentId:{}", cParentId);
@@ -206,23 +201,55 @@ public class ClassifyController {
         /**
          * 封装参数
          **/
-        Classify classify=classifyService.selectClasssifyById(id);
+        Classify classify = classifyService.selectClasssifyById(id);
         classify.setcName(cName);
         classify.setcParentId(cParentId);
-        Integer parentLevel =classifyService.selectParentLevel(cParentId);
-        classify.setcLevelFlag(parentLevel+1);
+        Integer parentLevel = classifyService.selectParentLevel(cParentId);
+        classify.setcLevelFlag(parentLevel + 1);
         classify.setUpdateTime(new Date());
-        int rows=0;
+        int rows = 0;
         try {
-            rows=classifyService.update(classify);
-        }catch (Exception e){
+            rows = classifyService.update(classify);
+        } catch (Exception e) {
             log.info("分类修改异常");
-            return new JsonResult(1,"分类修改失败");
+            return new JsonResult(1, "分类修改失败");
         }
-        if(rows<1){
-            return new JsonResult(1,"分类修改失败");
+        if (rows < 1) {
+            return new JsonResult(1, "分类修改失败");
         }
         return new JsonResult(0, "分类修改成功");
+    }
+
+    /**
+     * @param
+     * @return
+     * @Description: 删除分类
+     * @author Anakin Yang
+     * @date 2020/4/22 15:45
+     */
+    @RequestMapping("/delete")
+    @ResponseBody
+    public JsonResult delete(@RequestParam("id") String id) {
+        log.info("————————————分类删除————————————");
+        log.info("参数id:{}", id);
+        int rows = 0;
+        List<ClassifyVO> classifyChildren = classifyService.getClassifyChildren(id);
+        if (classifyChildren == null || classifyChildren.size() == 0) {
+            try {
+                rows = classifyService.deleteById(id);
+            } catch (Exception e) {
+                log.info("分类删除异常");
+                return new JsonResult(1, "删除失败");
+            }
+            if (rows < 1) {
+                return new JsonResult(1, "删除失败");
+            } else {
+                return new JsonResult(0, "删除成功");
+            }
+        } else {
+            log.info("此分类还有分类,先删除子分类才可删除此分类");
+            return new JsonResult(1, "此分类还有分类,先删除子分类才可删除此分类");
+        }
     }
 
 }
