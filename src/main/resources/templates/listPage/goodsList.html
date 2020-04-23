@@ -38,9 +38,9 @@
             url: '/goods/dataGrid'
             , id: 'goodsInfoData'
             , page: true //开启分页
-            , limit: 10
+            , limit: 5
             , cellMinWidth: 100
-            , limits: [10, 20, 30, 40, 50]
+            , limits: [5,10, 20, 30, 40, 50]
             , initSort: {
                 field: 'id' //排序字段，对应 cols 设定的各字段名
                 , type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
@@ -228,8 +228,8 @@
                                      <option value="gLocationName">商品位置</option>
             </select>
     </span>
-        <button class="layui-btn searchBtn" data-type="reload">搜索</button>
-        <button class="layui-btn addBtn" id="openAddGoodsPage">添加商品</button>
+        <button class="layui-btn searchBtn layui-btn-radius" data-type="reload">搜索</button>
+        <button class="layui-btn addBtn layui-btn-radius" id="openAddGoodsPage">添加商品</button>
     </div>
 
     <table id="goodsInfo" lay-filter="goodsInfo"></table>
